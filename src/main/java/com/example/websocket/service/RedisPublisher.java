@@ -13,7 +13,7 @@ public class RedisPublisher {
         this.redisTemplate = redisTemplate;
     }
     // 특정 채널에 메시지를 발행하는 역할이다.
-    public void publish(String channel,String message) {
-        redisTemplate.convertAndSend(channel,message);
+    public void publish(String roomId,String message) {
+        redisTemplate.convertAndSend("chat-room-"+roomId,message);
     }
 }

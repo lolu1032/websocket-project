@@ -1,47 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Chat Application</title>
 </head>
 <body>
-    <h1>채팅방</h1>
-    <div id="messages"></div>
-    <input type="text" id="messageInput" placeholder="메시지를 입력하세요" />
-    <button onclick="sendMessage()" type="submit">전송</button>
-</body>
+<h1>Chat Application</h1>
+<div>
+    <h2>Create Room</h2>
+    <input type="text" id="roomName" placeholder="Room Name"/>
+    <button onclick="createRoom()">Create Room</button>
+    <div id="roomId"></div>
+</div>
+<div>
+    <h2>Send Message</h2>
+    <input type="number" id="roomIdInput" placeholder="Room ID"/>
+    <input type="text" id="messageInput" placeholder="Message"/>
+    <button onclick="sendMessage()">Send</button>
+</div>
+<div>
+    <h2>Messages</h2>
+    <ul id="messages"></ul>
+</div>
 <script src="https://cdn.jsdelivr.net/sockjs/1.0.0/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script>
-    <!--  SockJS와 Stomp를 사용해 websocket 연결  -->
-    var socket = new SockJS('/chat');
-    var stompClient = Stomp.over(socket);
+    let stompClient = null;
 
+    function connect() {
+        const socket = new SockJS('/chat');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            stompClient.subscribe('/topic/messages', function (messageOutput) {
+                showMessage(JSON.parse(messageOutput.body));
+            });
 
-    stompClient.connect({},function(frame){
-        console.log("연결됨" + frame);
-
-        stompClient.subscribe('/topic/messages',function(message) {
-            showMessage(message.body);
-        })
-    })
-    function sendMessage() {
-        var messageInput = document.getElementById('messageInput');
-        var messages = messageInput.value.split('\n'); // 여러 메시지를 줄바꿈으로 구분
-
-        messages.forEach(function(message) {
-            if (message.trim() !== '') {
-                stompClient.send('/api/message', {}, message.trim()); // 각 메시지를 전송
-            }
+            stompClient.subscribe('/topic/roomCreated', function (roomOutput) {
+                const room = JSON.parse(roomOutput.body);
+                document.getElementById('roomId').innerText = `Room ID: ${room.id}`;
+            });
         });
+    }
 
-        messageInput.value = ''; // 입력 필드 비우기
+    function createRoom() {
+        const roomName = document.getElementById('roomName').value;
+        stompClient.send("/api/createRoom", {}, roomName);
     }
+
+    function sendMessage() {
+        const roomId = document.getElementById('roomIdInput').value;
+        const message = document.getElementById('messageInput').value;
+        stompClient.send("/api/sendMessage", {}, JSON.stringify({ roomId: roomId, message: message }));
+    }
+
     function showMessage(message) {
-        var messagesDiv = document.getElementById('messages');
-        var newMessage = document.createElement('div');
-        newMessage.textContent = message;
-        messagesDiv.appendChild(newMessage);
+        const messages = document.getElementById('messages');
+        const messageElement = document.createElement('li');
+        messageElement.innerText = message.message; // 여기에 `message`의 구조에 맞게 조정이 필요할 수 있음
+        messages.appendChild(messageElement);
     }
+
+    connect();
 </script>
+</body>
 </html>
