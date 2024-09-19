@@ -15,7 +15,7 @@ public class RedisConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         // 레디스 서버와의 연결 관리
         container.setConnectionFactory(connectionFactory);
-        // Redis의 "chat-room" 채널에서 실시간으로 메시지를 수신할 수 있는 설정을 의미
+        // Redis의 "chat-room-*" 채널에서 실시간으로 메시지를 수신할 수 있는 설정을 의미
         container.addMessageListener(listenerAdapter,new PatternTopic("chat-room-*"));
         return container;
     }

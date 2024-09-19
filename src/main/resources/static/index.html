@@ -25,7 +25,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script>
     let stompClient = null;
-
+<!-- 페이지 로드하면 한번만 실행된다. 여기서 구독을 하면 호출 할 필요없이 값을 넣어도 제이슨 형태로 값을 넣어준다 -->
     function connect() {
         const socket = new SockJS('/chat');
         stompClient = Stomp.over(socket);
@@ -40,18 +40,19 @@
             });
         });
     }
-
+    connect();
+<!--클라에서 방을 생성하면 /api/createRoom 에 방이름값을 보냅니다.-->
     function createRoom() {
         const roomName = document.getElementById('roomName').value;
         stompClient.send("/api/createRoom", {}, roomName);
     }
-
+<!--방 번호를 입력하고 메시지를 전달하면 /api/sendMessage에 제이슨 형태로 값이 들어갑니다.-->
     function sendMessage() {
         const roomId = document.getElementById('roomIdInput').value;
         const message = document.getElementById('messageInput').value;
         stompClient.send("/api/sendMessage", {}, JSON.stringify({ roomId: roomId, message: message }));
     }
-
+<!--입력한 메시지를 li형태로 보여줍니다.-->
     function showMessage(message) {
         const messages = document.getElementById('messages');
         const messageElement = document.createElement('li');
@@ -59,7 +60,6 @@
         messages.appendChild(messageElement);
     }
 
-    connect();
 </script>
 </body>
 </html>

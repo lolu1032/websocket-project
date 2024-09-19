@@ -17,7 +17,7 @@ public class ChatController {
         this.redisPublisher = redisPublisher;
         this.chatRoomRepository = chatRoomRepository;
     }
-    // 클라에서 받은 메시지를 publish을 통해 chat-room 특정 채널에 message를 보낸다
+    // api/createRoom을 통해 방이름을 쓰고 보내면 방생성
     @MessageMapping("/createRoom")
     @SendTo("/topic/roomCreated")
     public ChatRoom createRoom(String roomName) {
@@ -26,6 +26,7 @@ public class ChatController {
         chatRoom = chatRoomRepository.save(chatRoom);
         return chatRoom;
     }
+    // 클라에서 받은 메시지를 publish을 통해 chat-room 특정 채널에 message를 보낸다
     @MessageMapping("/sendMessage")
     public void sendMessage(String roomId,String message) {
         redisPublisher.publish(roomId,message);
