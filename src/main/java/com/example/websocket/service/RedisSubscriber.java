@@ -1,6 +1,8 @@
 package com.example.websocket.service;
 
 import com.example.websocket.dto.ChatRoomDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -12,14 +14,16 @@ import org.springframework.stereotype.Service;
 public class RedisSubscriber {
     // 웹소캣에서 지원해주는 클래스이며 클라이언트와 서버 간의 메시지 송수신을 도와준다
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final ObjectMapper objectMapper;
 
-    public RedisSubscriber(SimpMessagingTemplate simpMessagingTemplate) {
+    public RedisSubscriber(SimpMessagingTemplate simpMessagingTemplate, ObjectMapper objectMapper) {
         this.simpMessagingTemplate = simpMessagingTemplate;
+        this.objectMapper = objectMapper;
     }
 
-    public void handleMessage(ChatRoomDTO chatRoomDTO) {
+    public void handleMessage(String message) throws JsonProcessingException {
+        ChatRoomDTO chatRoomDTO = objectMapper.readValue(message, ChatRoomDTO.class);
         String roomId = chatRoomDTO.getRoomId();
-        String message = chatRoomDTO.getMessage();
         simpMessagingTemplate.convertAndSend("/topic/messages/"+roomId,message);
     }
 }
