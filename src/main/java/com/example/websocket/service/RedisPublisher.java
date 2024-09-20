@@ -1,5 +1,6 @@
 package com.example.websocket.service;
 
+import com.example.websocket.dto.ChatRoomDTO;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 

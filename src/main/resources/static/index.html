@@ -1,65 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <title>Chat Application</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>채팅 애플리케이션</title>
+    <script src="https://cdn.jsdelivr.net/sockjs/1.0.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #chat { margin: 20px; }
+        .chat-room { margin-bottom: 20px; }
+        .messages { border: 1px solid #ddd; padding: 10px; height: 300px; overflow-y: scroll; margin-bottom: 10px; }
+        .input-group { margin-bottom: 10px; }
+        .input-group input { width: 70%; margin-right: 10px; }
+    </style>
 </head>
 <body>
-<h1>Chat Application</h1>
-<div>
-    <h2>Create Room</h2>
-    <input type="text" id="roomName" placeholder="Room Name"/>
-    <button onclick="createRoom()">Create Room</button>
-    <div id="roomId"></div>
+<div id="chat">
+    <h1>채팅 애플리케이션</h1>
+
+    <!-- 채팅방 생성 -->
+    <div class="input-group">
+        <input type="text" id="roomNameInput" placeholder="채팅방 이름을 입력하세요">
+        <button onclick="createRoom()">방 생성하기</button>
+    </div>
+    <div id="roomStatus"></div>
+
+    <!-- 메시지 전송 -->
+    <div class="input-group">
+        <input type="text" id="roomIdInput" placeholder="방 ID를 입력하세요">
+        <input type="text" id="messageInput" placeholder="메시지를 입력하세요">
+        <button onclick="sendMessage()">보내기</button>
+    </div>
+
+    <!-- 방 목록과 메시지 표시 -->
+    <div id="chatRooms"></div>
 </div>
-<div>
-    <h2>Send Message</h2>
-    <input type="number" id="roomIdInput" placeholder="Room ID"/>
-    <input type="text" id="messageInput" placeholder="Message"/>
-    <button onclick="sendMessage()">Send</button>
-</div>
-<div>
-    <h2>Messages</h2>
-    <ul id="messages"></ul>
-</div>
-<script src="https://cdn.jsdelivr.net/sockjs/1.0.0/sockjs.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
 <script>
-    let stompClient = null;
-<!-- 페이지 로드하면 한번만 실행된다. 여기서 구독을 하면 호출 할 필요없이 값을 넣어도 제이슨 형태로 값을 넣어준다 -->
+    const socket = new SockJS('/chat');  // 웹소켓 엔드포인트
+    const stompClient = Stomp.over(socket);
+
+    // 연결 성공 시
     function connect() {
-        const socket = new SockJS('/chat');
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function (frame) {
-            stompClient.subscribe('/topic/messages', function (messageOutput) {
-                showMessage(JSON.parse(messageOutput.body));
+        stompClient.connect({}, (frame) => {
+            console.log('Connected: ' + frame);
+
+            // 방 생성 결과 수신
+            stompClient.subscribe('/topic/roomCreated', (message) => {
+                const room = JSON.parse(message.body);
+                addChatRoom(room.id, room.name);
             });
 
-            stompClient.subscribe('/topic/roomCreated', function (roomOutput) {
-                const room = JSON.parse(roomOutput.body);
-                document.getElementById('roomId').innerText = `Room ID: ${room.id}`;
+            // 에러 메시지 수신
+            stompClient.subscribe('/topic/error', (message) => {
+                displayError(message.body);
             });
         });
     }
-    connect();
-<!--클라에서 방을 생성하면 /api/createRoom 에 방이름값을 보냅니다.-->
-    function createRoom() {
-        const roomName = document.getElementById('roomName').value;
-        stompClient.send("/api/createRoom", {}, roomName);
+
+    // 방 추가
+    function addChatRoom(roomId, roomName) {
+        const chatRoomsDiv = document.getElementById('chatRooms');
+        let roomDiv = document.getElementById(`room-${roomId}`);
+
+        if (!roomDiv) {
+            roomDiv = document.createElement('div');
+            roomDiv.id = `room-${roomId}`;
+            roomDiv.className = 'chat-room';
+            roomDiv.innerHTML = `<h3>${roomName}</h3><div class="messages" id="messages-${roomId}"></div>`;
+            chatRoomsDiv.appendChild(roomDiv);
+
+            // 메시지 수신 구독
+            stompClient.subscribe(`/topic/messages/${roomId}`, (message) => {
+                const messagesDiv = document.getElementById(`messages-${roomId}`);
+                messagesDiv.innerHTML += `<p>${message.body}</p>`;
+                messagesDiv.scrollTop = messagesDiv.scrollHeight; // 스크롤을 최신 메시지로 이동
+            });
+        }
     }
-<!--방 번호를 입력하고 메시지를 전달하면 /api/sendMessage에 제이슨 형태로 값이 들어갑니다.-->
+
+    // 방 생성
+    function createRoom() {
+        const roomName = document.getElementById('roomNameInput').value;
+        stompClient.send('/api/createRoom', {}, roomName);
+    }
+
+    // 메시지 전송
     function sendMessage() {
         const roomId = document.getElementById('roomIdInput').value;
         const message = document.getElementById('messageInput').value;
-        stompClient.send("/api/sendMessage", {}, JSON.stringify({ roomId: roomId, message: message }));
-    }
-<!--입력한 메시지를 li형태로 보여줍니다.-->
-    function showMessage(message) {
-        const messages = document.getElementById('messages');
-        const messageElement = document.createElement('li');
-        messageElement.innerText = message.message; // 여기에 `message`의 구조에 맞게 조정이 필요할 수 있음
-        messages.appendChild(messageElement);
+        stompClient.send('/api/sendMessage', {}, JSON.stringify({ roomId, message }));
+        document.getElementById('messageInput').value = ''; // 입력란 초기화
     }
 
+    // 에러 메시지 표시
+    function displayError(errorMessage) {
+        alert('오류 발생: ' + errorMessage);
+    }
+
+    // 연결 시작
+    connect();
 </script>
 </body>
 </html>

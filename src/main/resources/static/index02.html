@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Application</title>
+</head>
+<body>
+<h1>Chat Application</h1>
+<div>
+    <h2>Create Room</h2>
+    <input type="text" id="roomName" placeholder="Room Name"/>
+    <button onclick="createRoom()">Create Room</button>
+    <div id="roomId"></div>
+</div>
+<div>
+    <h2>Send Message</h2>
+    <input type="number" id="roomIdInput" placeholder="Room ID"/>
+    <input type="text" id="messageInput" placeholder="Message"/>
+    <button onclick="sendMessage()">Send</button>
+</div>
+<div>
+    <h2>Messages</h2>
+    <ul id="messages"></ul>
+</div>
+<script src="https://cdn.jsdelivr.net/sockjs/1.0.0/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script>
+    let stompClient = null;
+<!-- 페이지 로드하면 한번만 실행된다. 여기서 구독을 하면 호출 할 필요없이 값을 넣어도 제이슨 형태로 값을 넣어준다 -->
+    function connect() {
+        const socket = new SockJS('/chat');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            stompClient.subscribe('/topic/messages', function (messageOutput) {
+                showMessage(JSON.parse(messageOutput.body));
+            });
+
+            stompClient.subscribe('/topic/roomCreated', function (roomOutput) {
+                const room = JSON.parse(roomOutput.body);
+                document.getElementById('roomId').innerText = `Room ID: ${room.id}`;
+            });
+            stompClient.subscribe('/topic/error',function(errorOutput) {
+                alert('Error: ' + errorOutput.body);
+            });
+        });
+    }
+    connect();
+<!--클라에서 방을 생성하면 /api/createRoom 에 방이름값을 보냅니다.-->
+    function createRoom() {
+        const roomName = document.getElementById('roomName').value;
+        stompClient.send("/api/createRoom", {}, roomName);
+    }
+<!--방 번호를 입력하고 메시지를 전달하면 /api/sendMessage에 제이슨 형태로 값이 들어갑니다.-->
+    function sendMessage() {
+        const roomId = document.getElementById('roomIdInput').value;
+        const message = document.getElementById('messageInput').value;
+        stompClient.send("/api/sendMessage", {}, JSON.stringify({ roomId: roomId, message: message }));
+    }
+<!--입력한 메시지를 li형태로 보여줍니다.-->
+    function showMessage(message) {
+        const messages = document.getElementById('messages');
+        const messageElement = document.createElement('li');
+        messageElement.innerText = message.message; // 여기에 `message`의 구조에 맞게 조정이 필요할 수 있음
+        messages.appendChild(messageElement);
+    }
+
+</script>
+</body>
+</html>
