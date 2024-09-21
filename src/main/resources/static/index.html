@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Chat Room</title>
+    <title>Chat Room</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -36,7 +36,8 @@
     <label for="message">Your Message:</label>
     <input type="text" id="message" placeholder="Type your message">
 
-    <button onclick="joinRoom()">Join Room & Start Chatting</button>
+    <button onclick="joinRoom()">Join Room</button>
+    <button onclick="leaveRoom()">Leave Room</button>
 
     <div id="chat"></div>
 
@@ -49,48 +50,62 @@
 <script>
     let stompClient = null;
     let currentRoomId = null;
+    let currentSubscription = null;
 
-    // WebSocket 연결 설정
     function connect() {
         const socket = new SockJS('/chat');  // 서버의 WebSocket 엔드포인트
         stompClient = Stomp.over(socket);
-        stompClient.connect({}, function () {
-            console.log("Connected to WebSocket");
+        stompClient.connect({}, function (frame) {
+            console.log("Connected to WebSocket: " + frame);
 
-            stompClient.subscribe('/topic/error',function(errorOutput) {
+            // 에러 메시지 처리
+            stompClient.subscribe('/topic/error', function (errorOutput) {
                 alert('Error: ' + errorOutput.body);
             });
         });
     }
 
-    // 방에 참여하고 메시지 수신 대기
-   function joinRoom() {
+    function joinRoom() {
         const roomId = document.getElementById("roomId").value;
 
-        // 방 존재 여부 확인
-        stompClient.send("/api/checkRoom", {}, roomId);
+        if (!roomId) {
+            alert("방 번호를 입력하세요.");
+            return;
+        }
 
-        // 방 존재 여부 응답 구독
+        // 방 체크 및 구독 처리
+        stompClient.send("/api/checkRoom", {}, roomId);
         stompClient.subscribe('/topic/roomCheck', function (response) {
             const roomExists = JSON.parse(response.body);
 
             if (roomExists) {
-                currentRoomId = roomId;
+                if (currentSubscription) {
+                    leaveRoom(); // 이전 방에서 구독 해제
+                }
 
-                // 방에 구독
-                stompClient.subscribe(`/topic/messages/${roomId}`, function (message) {
+                currentRoomId = roomId;
+                currentSubscription = stompClient.subscribe(`/topic/messages/${roomId}`, function (message) {
                     const receivedMessage = JSON.parse(message.body).message;
                     document.getElementById("chat").innerHTML += `<div>${receivedMessage}</div>`;
                 });
 
-                document.getElementById("chat").innerHTML += `<div>Joined Room ${roomId}</div>`;
+                // 이전 채팅 내용 삭제
+                document.getElementById("chat").innerHTML = `<div>Joined Room ${roomId}</div>`;
             } else {
                 alert("해당 방은 존재하지 않습니다.");
             }
         });
     }
 
-    // 메시지 전송
+    function leaveRoom() {
+        if (currentSubscription) {
+            currentSubscription.unsubscribe(); // 현재 방 구독 해제
+            currentSubscription = null;
+            currentRoomId = null;
+            document.getElementById("chat").innerHTML = ""; // 채팅 내용 초기화
+        }
+    }
+
     function sendMessage() {
         const message = document.getElementById("message").value;
         const roomId = currentRoomId;
@@ -106,7 +121,6 @@
         }
     }
 
-    // 페이지 로드 시 WebSocket 연결
     window.onload = connect;
 </script>
 </body>
