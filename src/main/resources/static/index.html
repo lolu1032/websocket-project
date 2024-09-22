@@ -67,7 +67,7 @@
 
     function joinRoom() {
         const roomId = document.getElementById("roomId").value;
-
+    <!--input에 값이 비어있으면 되돌린다.-->
         if (!roomId) {
             alert("방 번호를 입력하세요.");
             return;
@@ -76,14 +76,16 @@
         // 방 체크 및 구독 처리
         stompClient.send("/api/checkRoom", {}, roomId);
         stompClient.subscribe('/topic/roomCheck', function (response) {
+        <!--stompClient.subscribe를 통한 수신한 메시지 본문 JSON 문자열을 JavaScript 객체로 변환하는 시킴-->
             const roomExists = JSON.parse(response.body);
-
+        <!--이전 방이 존재하며 입력한 방 번호가 존재하면 이전 방 구독은 해제-->
             if (roomExists) {
                 if (currentSubscription) {
                     leaveRoom(); // 이전 방에서 구독 해제
                 }
-
+        <!--입력한 방 번호는 roomId가 됨-->
                 currentRoomId = roomId;
+        <!--입력한 방 번호에 구독을 설정한다.-->
                 currentSubscription = stompClient.subscribe(`/topic/messages/${roomId}`, function (message) {
                     const receivedMessage = JSON.parse(message.body).message;
                     document.getElementById("chat").innerHTML += `<div>${receivedMessage}</div>`;
@@ -99,7 +101,7 @@
 
     function leaveRoom() {
         if (currentSubscription) {
-            currentSubscription.unsubscribe(); // 현재 방 구독 해제
+            currentSubscription.unsubscribe(); // unsubscribe()은 STOMP 클라이언트에서 현재 구독을 해제해줌
             currentSubscription = null;
             currentRoomId = null;
             document.getElementById("chat").innerHTML = ""; // 채팅 내용 초기화
