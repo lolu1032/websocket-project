@@ -6,6 +6,7 @@ import com.example.websocket.entity.ChatRoom;
 import com.example.websocket.service.RedisPublisher;
 import com.example.websocket.service.RedisSubscriber;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -13,6 +14,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 @Controller
+@Slf4j
 public class ChatController {
     private final RedisPublisher redisPublisher;
     private final ChatRoomRepository chatRoomRepository;
@@ -36,6 +38,7 @@ public class ChatController {
     @MessageMapping("/sendMessage")
     public void sendMessage(@Payload ChatRoomDTO chatRoomDTO) throws JsonProcessingException {
         String roomId = chatRoomDTO.getRoomId();
+        log.info("chatRoomDTO ={}",chatRoomDTO);
         if (chatRoomRepository.existsById(Integer.parseInt(roomId))) {
             redisPublisher.publish(chatRoomDTO);
         } else {

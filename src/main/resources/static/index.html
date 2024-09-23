@@ -51,12 +51,15 @@
     let stompClient = null;
     let currentRoomId = null;
     let currentSubscription = null;
+    const browserId = localStorage.getItem('browserId') || Math.random().toString(36).substring(2);
+    localStorage.setItem('browserId', browserId);
 
     function connect() {
         const socket = new SockJS('/chat');  // 서버의 WebSocket 엔드포인트
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             console.log("Connected to WebSocket: " + frame);
+            console.log("브라우저아이디 : " + browserId);
 
             // 에러 메시지 처리
             stompClient.subscribe('/topic/error', function (errorOutput) {
@@ -86,9 +89,12 @@
         <!--입력한 방 번호는 roomId가 됨-->
                 currentRoomId = roomId;
         <!--입력한 방 번호에 구독을 설정한다.-->
-                currentSubscription = stompClient.subscribe(`/topic/messages/${roomId}`, function (message) {
-                    const receivedMessage = JSON.parse(message.body).message;
-                    document.getElementById("chat").innerHTML += `<div>${receivedMessage}</div>`;
+                currentSubscription = stompClient.subscribe(`/topic/messages/${roomId}/${browserId}`, function (message) {
+                    const receivedMessage = JSON.parse(message.body);
+
+                    const msg = receivedMessage.message;
+                // 모든 메시지 표시
+                document.getElementById("chat").innerHTML += `<div>${msg}</div>`;
                 });
 
                 // 이전 채팅 내용 삭제
@@ -115,7 +121,8 @@
         if (roomId && message) {
             stompClient.send("/api/sendMessage", {}, JSON.stringify({
                 roomId: roomId,
-                message: message
+                message: message,
+                browserId: browserId  // 고유 브라우저 ID 추가
             }));
             document.getElementById("message").value = "";  // 입력란 초기화
         } else {

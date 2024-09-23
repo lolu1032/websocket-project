@@ -1,10 +1,13 @@
 package com.example.websocket.dto;
 
+import lombok.ToString;
+
+@ToString
 public class ChatRoomDTO {
     private String roomId;
     private String message;
+    private String browserId;
 
-    // Getters and Setters
     public String getRoomId() {
         return roomId;
     }
@@ -19,6 +22,14 @@ public class ChatRoomDTO {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getBrowserId() {
+        return browserId;
+    }
+
+    public void setBrowserId(String browserId) {
+        this.browserId = browserId;
     }
 
 }
