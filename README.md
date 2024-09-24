@@ -16,8 +16,9 @@
 이전 문제는 해결했지만 이 문제를 해결하니 갑자기 채팅을 치고 보내면 보여야할 채팅 내역이 안보이기 시작
 # 2024-09-24
 ## 브라우저 구분
-![크롬](https://github.com/user-attachments/assets/ff60f74b-5fae-4978-ad5c-959800e90d1a)
-![시크릿](https://github.com/user-attachments/assets/0f4ce54a-481e-4549-9c66-79b421a02d78)
-아직 유저 아이디가 없어서 이전의 문제점을 브라우저 아이디로 임시 대체했다.
+![크롬](https://github.com/user-attachments/assets/2cf0d235-01aa-41d0-bee7-f4f34b176620)
+![시크릿](https://github.com/user-attachments/assets/9904ae3b-4bbc-4732-b775-9f616ea58182)
 ## 문제 해결
 Joined를 하면 다른 브라우저도 같이 이벤트가 발생한다는거다 그걸 방지하기위해 checkRoom할때 브라우저도 같이 받아 구분을 시켜 다른 브라우저에서 이벤트가 발생하는걸 방지 시켰다.
+## 다음에 할거
+JWT통한 유저 아이디를 만들어 토큰을 받아 브라우저 아이디를 대체할 예정이다.
