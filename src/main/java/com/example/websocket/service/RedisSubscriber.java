@@ -21,7 +21,6 @@ public class RedisSubscriber {
     public void handleMessage(String message) throws JsonProcessingException {
         ChatRoomDTO chatRoomDTO = objectMapper.readValue(message, ChatRoomDTO.class);
         String roomId = chatRoomDTO.getRoomId();
-        String browserId = chatRoomDTO.getBrowserId();
-        simpMessagingTemplate.convertAndSend("/topic/messages/" + roomId+browserId, chatRoomDTO);
+        simpMessagingTemplate.convertAndSend("/topic/messages/" + roomId, chatRoomDTO);
     }
 }

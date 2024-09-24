@@ -13,6 +13,9 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 @Slf4j
 public class ChatController {
@@ -48,9 +51,21 @@ public class ChatController {
     // 방이 있는지 체크한다.
     @MessageMapping("/checkRoom")
     @SendTo("/topic/roomCheck")
-    public boolean checkRoom(String roomId) {
-        return chatRoomRepository.existsById(Integer.parseInt(roomId));
+    public Map<String, Object> checkRoom(Map<String, String> payload) {
+        // roomId만 사용하여 방 존재 여부 확인
+        String roomId = payload.get("roomId");
+        String browserId = payload.get("browserId");
+
+        boolean roomExists = chatRoomRepository.existsById(Integer.parseInt(roomId));
+
+        // 방 존재 여부와 browserId를 함께 반환
+        Map<String, Object> response = new HashMap<>();
+        response.put("roomExists", roomExists);
+        response.put("browserId", browserId);
+
+        return response;
     }
+
     // 에러 코드다.
     @MessageExceptionHandler(IllegalStateException.class)
     @SendTo("/topic/error")
