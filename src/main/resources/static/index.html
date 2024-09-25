@@ -94,8 +94,10 @@
             currentRoomId = roomId;
 
             currentSubscription = stompClient.subscribe(`/topic/messages/${roomId}`, function (message) {
-                const receivedMessage = JSON.parse(message.body).message;
-                document.getElementById("chat").innerHTML += `<div>${receivedMessage}</div>`;
+                const receivedMessage = JSON.parse(message.body);
+                const msg = receivedMessage.message;
+                const id = receivedMessage.browserId;
+                document.getElementById("chat").innerHTML += `<div>${id} : ${msg}</div>`;
             });
 
             // browserId가 현재 브라우저와 일치할 때만 'Joined Room' 메시지 출력
