@@ -23,25 +23,25 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 // Rest API이므로 basic auth 및 csrf 보안을 사용하지 않는다.
-                .httpBasic((httpBasic) -> {
-                    httpBasic.disable();
-                })
-                .csrf((csrf) -> {
-                  csrf.disable();
-                })
+                .httpBasic((httpBasic) -> httpBasic
+                    .disable()
+                )
+                .csrf((csrf) -> csrf
+                  .disable()
+                )
                 // JWT를 사용하기 때문에 세션을 사용하지 않는다.
-                .sessionManagement((sessionManagement) -> {
-                    sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                })
-                .authorizeHttpRequests((authorizeRequests) -> {
+                .sessionManagement((sessionManagement) -> sessionManagement
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .authorizeHttpRequests((request) -> request
                     //해당 API에 대해서는 모든 요청을 허가
-                    authorizeRequests.requestMatchers("/members/sign-in").permitAll();
+                    .requestMatchers("/members/sign-in", "/resources/**","/static/**","/","index.html","/topic/**","/chat/**").permitAll()
                     // USER 권한이 있어야 요청할 수 있다.
-                    authorizeRequests.requestMatchers("members/test")
-                            .hasAnyRole("USER");
+                    .requestMatchers("members/test")
+                            .hasAnyRole("USER")
                     // 이 밖에 모든 요청에 대해서 인증을 필요로 한다는 설정
-                    authorizeRequests.anyRequest().authenticated();
-                })
+                    .anyRequest().authenticated()
+                )
                 // JWT 인증을 위하여 직접 구현한 필터를 UsernamePasswordAuthenticationFilter 전에 실행
                     .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
         UsernamePasswordAuthenticationFilter.class).build();
