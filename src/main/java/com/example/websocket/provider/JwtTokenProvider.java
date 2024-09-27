@@ -37,11 +37,11 @@ public class JwtTokenProvider {
 
         long now = (new Date()).getTime();
 
-        Date accessTokenExpiresin = new Date(now + 86400000);
+        Date accessTokenExpiresIn = new Date(now + 86400000);
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth",authorities)
-                .setExpiration(accessTokenExpiresin)
+                .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
@@ -71,7 +71,7 @@ public class JwtTokenProvider {
         UserDetails principal = new User(claims.getSubject(),"",authorities);
         return new UsernamePasswordAuthenticationToken(principal,"",authorities);
     }
-    public boolean vaildateToken(String token) {
+    public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(key)
