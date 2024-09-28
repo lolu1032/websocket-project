@@ -22,3 +22,8 @@
 Joined를 하면 다른 브라우저도 같이 이벤트가 발생한다는거다 그걸 방지하기위해 checkRoom할때 브라우저도 같이 받아 구분을 시켜 다른 브라우저에서 이벤트가 발생하는걸 방지 시켰다.
 ## 다음에 할거
 JWT통한 유저 아이디를 만들어 토큰을 받아 브라우저 아이디를 대체할 예정이다.
+# 2024-09-27
+## 문제점
+![오류](https://github.com/user-attachments/assets/2a3363ad-408e-4bd6-be26-9b78a0b5ea96)
+
+securityConfig에 /api/** permit으로 설정했지만 오류 발생 
