@@ -1,58 +1,75 @@
 package com.example.websocket.config;
 
-import com.example.websocket.provider.JwtAuthenticationFilter;
-import com.example.websocket.provider.JwtTokenProvider;
-import com.example.websocket.service.member.MemberService;
-import com.example.websocket.service.userDetail.UserDetailsService;
+import com.example.websocket.security.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.DelegatingSecurityContextRepository;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
-    private final JwtTokenProvider jwtTokenProvider;
+public class SecurityConfig{
+
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+    private final CustomLoginAuthenticationEntryPoint authenticationEntryPoint;
+    private final AuthenticationConfiguration authenticationConfiguration;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
-                // Rest API이므로 basic auth 및 csrf 보안을 사용하지 않는다.
-                .httpBasic((httpBasic) -> httpBasic
-                    .disable()
-                )
-                .csrf((csrf) -> csrf
-                  .disable()
-                )
-//                .formLogin((formLogin) -> formLogin
-//                        .loginPage("/api/sign-in"))
-                // JWT를 사용하기 때문에 세션을 사용하지 않는다.
-                .sessionManagement((sessionManagement) -> sessionManagement
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .authorizeHttpRequests((request) -> request
-                    //해당 API에 대해서는 모든 요청을 허가
-                    .requestMatchers( "/api/**","/resources/**","/static/**","/","index.html","/topic/**","/chat/**").permitAll()
-                    // USER 권한이 있어야 요청할 수 있다.
-                    .requestMatchers("/api/test")
-                            .hasAnyRole("USER")
-                    // 이 밖에 모든 요청에 대해서 인증을 필요로 한다는 설정
-                    .anyRequest().authenticated()
-                )
-                // JWT 인증을 위하여 직접 구현한 필터를 UsernamePasswordAuthenticationFilter 전에 실행
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
-                        UsernamePasswordAuthenticationFilter.class).build();
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
+
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        // 비번 암호화
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers("/api/**").authenticated()
+                        .anyRequest().permitAll())
+                .addFilterBefore(ajaxAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(config -> config
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler));
+
+        return http.build();
     }
+
+    @Bean
+    public CustomAuthenticationFilter ajaxAuthenticationFilter() throws Exception {
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter();
+        customAuthenticationFilter.setAuthenticationManager(authenticationManager());
+        customAuthenticationFilter.setAuthenticationSuccessHandler(customAuthenticationSuccessHandler);
+        customAuthenticationFilter.setAuthenticationFailureHandler(customAuthenticationFailureHandler);
+
+        // **
+        customAuthenticationFilter.setSecurityContextRepository(
+                new DelegatingSecurityContextRepository(
+                        new RequestAttributeSecurityContextRepository(),
+                        new HttpSessionSecurityContextRepository()
+                ));
+
+        return customAuthenticationFilter;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager() throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
 }
