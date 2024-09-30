@@ -1,31 +1,41 @@
 package com.example.websocket.service;
 
+import com.example.websocket.dao.MemberRepository;
+import com.example.websocket.entity.Member;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 @Service
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final List<UserDetails> users = new ArrayList<>();
-
-    public CustomUserDetailsService() {
-        // 테스트용 사용자 추가
-        users.add(org.springframework.security.core.userdetails.User.withUsername("user")
-                .password("{noop}password") // {noop}은 비밀번호 암호화 방식을 설정하는 것
-                .roles("USER") // 역할 추가
-                .build());
-    }
+    private final MemberRepository memberRepository;
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return users.stream()
-                .filter(user -> user.getUsername().equals(username))
-                .findFirst()
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return memberRepository.findByEmail(username)
+                .map(this::createUserDetails)
+                .orElseThrow(() -> new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다."));
+    }
+
+    // DB 에 User 값이 존재한다면 UserDetails 객체로 만들어서 리턴
+    private UserDetails createUserDetails(Member member) {
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getAuthority().toString());
+
+        return new User(
+                String.valueOf(member.getId()),
+                member.getPassword(),
+                Collections.singleton(grantedAuthority)
+        );
     }
 }
