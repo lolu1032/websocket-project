@@ -82,8 +82,9 @@ public class JwtTokenProvider {
         // UserDetails는 시큐리티에서 사용자정보를 나타내는 객체
         // sub : 사용자 이름 , password, 권한을 객체 넣느다.
         UserDetails principal = new User(claims.getSubject(),"",authorities);
-        // 시큐리티에서 사용자의 인증 정보를 나타내는 객체를 생성한다.
-        // 사용자정보 , "" , 권한
+        /**
+        * UserDetails에서 인증된 정보를 UsernamePasswordAuthenticationToken안에 principal과 authorities을 설정합니다.
+         */
         return new UsernamePasswordAuthenticationToken(principal,"",authorities);
     }
     // Signature jwt 검증
@@ -102,6 +103,14 @@ public class JwtTokenProvider {
         }
         return false;
     }
+
+    /**
+     * 사용자 정보를 보관하는 메소드
+     * @param accessToken
+     * @return 사용자 정보를 담고 있는 Claims 객체
+     * 비밀키를 사용하여 JWT토큰을 검증하고 그 안에 있는 사용자 정보를 반환한다.
+     * @throws ExpiredJwtException 토큰이 만료된 경우에도 예외에서 Claims를 추출하여 반환합니다.
+     */
     private Claims parseClaims(String accessToken) {
         try {
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
