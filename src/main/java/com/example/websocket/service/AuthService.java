@@ -27,8 +27,15 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
+    /**
+     * @param memberRequestDto
+     * @return 이메일 중복이 아닐시 데이터베이스에 저장하기
+     */
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
+        /**
+         * 이메일 중복확인
+         */
         if (memberRepository.existsByEmail(memberRequestDto.getEmail())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
         }

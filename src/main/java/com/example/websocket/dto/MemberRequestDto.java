@@ -14,6 +14,10 @@ public class MemberRequestDto {
     private String email;
     private String password;
 
+    /**
+     * @param passwordEncoder
+     * @return 회원가입을 하면 이메일과 비밀번호 암호화 권한을 빌드한다. 및 로그인 로직이있다.
+     */
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .email(email)
