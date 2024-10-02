@@ -3,6 +3,10 @@ package com.example.websocket.security;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+/**
+ * JWT토큰 인증된 사용자 정보의 ID를 가져옵니다.
+ * @Throw 만약 인증 실패 시 예외처리를 담당합니다.
+ */
 public class SecurityUtil {
     private SecurityUtil() { }
     public static Long getCurrentMemberId() {

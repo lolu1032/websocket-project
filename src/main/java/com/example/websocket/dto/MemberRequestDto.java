@@ -17,6 +17,9 @@ public class MemberRequestDto {
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .email(email)
+                /**
+                 * password 암호화
+                 */
                 .password(passwordEncoder.encode(password))
                 .authority(Member.Authority.ROLE_USER)
                 .build();
