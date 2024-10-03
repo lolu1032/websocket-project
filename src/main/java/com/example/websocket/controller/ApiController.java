@@ -5,6 +5,7 @@ import com.example.websocket.dto.MemberRequestDto;
 import com.example.websocket.dto.MemberResponseDto;
 import com.example.websocket.dto.TokenRequestDto;
 import com.example.websocket.service.AuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,8 +25,9 @@ public class ApiController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtToken> login(@RequestBody MemberRequestDto memberRequestDto) {
-        return ResponseEntity.ok(authService.login(memberRequestDto));
+    public ResponseEntity<JwtToken> login(@RequestBody MemberRequestDto memberRequestDto, HttpServletResponse response) {
+        JwtToken loginToken = authService.login(memberRequestDto,response);
+        return ResponseEntity.ok(loginToken);
     }
 
     @PostMapping("/reissue")

@@ -10,6 +10,8 @@ import com.example.websocket.entity.Member;
 import com.example.websocket.entity.RefreshToken;
 import com.example.websocket.security.JwtTokenProvider;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -45,7 +47,7 @@ public class AuthService {
     }
 
     @Transactional
-    public JwtToken login(MemberRequestDto memberRequestDto) {
+    public JwtToken login(MemberRequestDto memberRequestDto,HttpServletResponse response) {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = memberRequestDto.toAuthentication();
 
@@ -63,6 +65,8 @@ public class AuthService {
                 .build();
 
         refreshTokenRepository.save(refreshToken);
+
+        createCookie(response, tokenDto.getAccessToken()); // accessToken을 쿠키에 저장
 
         // 5. 토큰 발급
         return tokenDto;
@@ -96,5 +100,14 @@ public class AuthService {
 
         // 토큰 발급
         return tokenDto;
+    }
+    public void createCookie(HttpServletResponse response, String token) {
+        Cookie cookie = new Cookie("accessToken",token);
+        cookie.setHttpOnly(true);  // JavaScript에서 접근 불가능하도록 설정
+        cookie.setSecure(true);    // HTTPS에서만 전송 (HTTPS 환경에서 권장)
+        cookie.setPath("/");       // 쿠키의 경로 설정
+        cookie.setMaxAge(60 * 60); // 쿠키 유효 기간 (예: 1시간)
+
+        response.addCookie(cookie); // 쿠키를 응답에 추가
     }
 }
