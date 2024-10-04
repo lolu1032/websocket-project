@@ -101,13 +101,12 @@ public class AuthService {
         // 토큰 발급
         return tokenDto;
     }
-    public void createCookie(HttpServletResponse response, String token) {
-        Cookie cookie = new Cookie("accessToken",token);
-        cookie.setHttpOnly(true);  // JavaScript에서 접근 불가능하도록 설정
-        cookie.setSecure(true);    // HTTPS에서만 전송 (HTTPS 환경에서 권장)
-        cookie.setPath("/");       // 쿠키의 경로 설정
-        cookie.setMaxAge(60 * 60); // 쿠키 유효 기간 (예: 1시간)
-
-        response.addCookie(cookie); // 쿠키를 응답에 추가
+    private void createCookie(HttpServletResponse response, String token) {
+        Cookie cookie = new Cookie("accessToken", token);
+        cookie.setHttpOnly(true); // HTTP-Only 설정
+        cookie.setSecure(false); // 개발 중이므로 false로 설정 (배포 시 true로 변경)
+        cookie.setPath("/"); // 경로 설정
+        cookie.setMaxAge(60 * 60); // 쿠키 만료 시간 설정 (1시간)
+        response.addCookie(cookie); // 쿠키 추가
     }
 }

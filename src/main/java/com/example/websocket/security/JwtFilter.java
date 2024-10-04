@@ -2,6 +2,7 @@ package com.example.websocket.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,8 @@ public class JwtFilter extends OncePerRequestFilter {
          * resolveToken(request)
          * request를 통해 jwt토큰을 가져옵니다.
          */
-        String jwt = resolveToken(request);
+        String jwt = getTokenFromCookies(request.getCookies());
+//        String jwt = resolveToken(request);
         /**
          * StringUtils.hasText(jwt)
          * JWT가 빈백또는 null 빈문자열인지 확인한다. 세 가지일시 false를 내보낸다.
@@ -35,7 +37,16 @@ public class JwtFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request,response);
     }
-
+    private String getTokenFromCookies(Cookie[] cookies) {
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("accessToken")) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
+    }
     /**
      * @param request
      * @return JWT토큰만을 사용하기 위해 ""로 분리한다

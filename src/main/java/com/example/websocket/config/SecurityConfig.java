@@ -1,8 +1,6 @@
 package com.example.websocket.config;
 
-import com.example.websocket.security.JwtAccessDeniedHandler;
-import com.example.websocket.security.JwtAuthenticationEntryPoint;
-import com.example.websocket.security.JwtTokenProvider;
+import com.example.websocket.security.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,8 +44,12 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless 세션 설정
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**","/","/login").permitAll() // 인증 없이 접근 가능한 API
-                        .anyRequest().authenticated()); // 나머지 API는 인증 필요
+                        .requestMatchers("/auth/**","/chat/**","/login","/static/**", "/resources/**","/css/**").permitAll() // 인증 없이 접근 가능한 API
+                        .anyRequest().authenticated()) // 나머지 API는 인증 필요
+                .formLogin((login) -> login
+                        .loginPage("/login")
+                        .permitAll())
+                .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
