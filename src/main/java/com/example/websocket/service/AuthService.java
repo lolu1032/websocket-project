@@ -13,13 +13,14 @@ import com.example.websocket.security.JwtTokenProvider;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -68,6 +69,7 @@ public class AuthService {
 
         createCookie(response, tokenDto.getAccessToken()); // accessToken을 쿠키에 저장
 
+        log.info("tokenDto={}",tokenDto);
         // 5. 토큰 발급
         return tokenDto;
     }
@@ -106,7 +108,7 @@ public class AuthService {
         cookie.setHttpOnly(true); // HTTP-Only 설정
         cookie.setSecure(false); // 개발 중이므로 false로 설정 (배포 시 true로 변경)
         cookie.setPath("/"); // 경로 설정
-        cookie.setMaxAge(60 * 60); // 쿠키 만료 시간 설정 (1시간)
+        cookie.setMaxAge(1000 * 60 * 30);
         response.addCookie(cookie); // 쿠키 추가
     }
 }

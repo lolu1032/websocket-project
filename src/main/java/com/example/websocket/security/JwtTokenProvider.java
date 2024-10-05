@@ -60,6 +60,7 @@ public class JwtTokenProvider {
                 .grentType(BEARER_TYPE)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
                 .build();
     }
     public Authentication getAuthentication(String token) {
