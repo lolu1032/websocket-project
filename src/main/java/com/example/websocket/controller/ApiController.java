@@ -31,7 +31,7 @@ public class ApiController {
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<JwtToken> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
-        return ResponseEntity.ok(authService.reissue(tokenRequestDto));
+    public ResponseEntity<JwtToken> reissue(@RequestBody TokenRequestDto tokenRequestDto,HttpServletResponse response) {
+        return ResponseEntity.ok(authService.reissue(tokenRequestDto,response));
     }
 }
