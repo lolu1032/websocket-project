@@ -34,7 +34,7 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes); // securitKey를 이용하여 key객체 생성
     }
 
-    public JwtToken generateToken(Authentication authentication, HttpServletResponse response) {
+    public JwtToken generateToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream() // Authentication에서 제공해주는 권한 생성
                 .map(GrantedAuthority::getAuthority) // 각 권한을 문자열로 반환한다.
                 .collect(Collectors.joining(",")); // 권한들을 ,로 구분한다 ROLE_USER,ROLE_ADMIN
@@ -58,13 +58,10 @@ public class JwtTokenProvider {
         // RefreshToken 생성
         // 유효 기간이 만료된 토큰을 새로운 토큰으로 발급
         String refreshToken = Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim("refresh", authorities)
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
-        response.addCookie(createCookie(refreshToken));
 
         return JwtToken.builder()
                 .grentType(BEARER_TYPE)
@@ -77,17 +74,14 @@ public class JwtTokenProvider {
         // Payload의 데이터를 복호화하여 Claims 객체로 변환한다.
         // 예를 들어 Base64URL 형태를 디코딩해서 JSON형태로 다시 만들어 claims 객체에 넣는다
         Claims claims = parseClaims(token);
-        // refreshToken 여부를 확인하여 권한 정보가 없을 경우 예외 발생 방지
-        boolean isRefreshToken = isRefreshToken(claims);
 
-        // refreshToken이 아니고 auth가 null일 경우 예외 처리
-        if (!isRefreshToken && claims.get(AUTHORITIES_KEY) == null) {
+        if (claims.get("auth") == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
 
         Collection<? extends GrantedAuthority> authorities =
                 // 문자열로 변환 후 , 로 나누어 배열을 만든다.
-                Arrays.stream(claims.get("refresh").toString().split(","))
+                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                 .map(SimpleGrantedAuthority::new) // SimpleGrantedAuthority 객체로 바꾼다. SimpleGrantedAuthority 은 시큐리티에서 권한을 나타내는 클래스다
                 .collect(Collectors.toList()); // SimpleGrantedAuthority("ROLE_USER") 반환한 객체를 리스트로 수집한다.
         // UserDetails는 시큐리티에서 사용자정보를 나타내는 객체
@@ -128,21 +122,5 @@ public class JwtTokenProvider {
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
-    }
-    private boolean isRefreshToken(Claims claims) {
-        // 예를 들어, refreshToken을 발급할 때 "refresh"라는 클레임을 추가한 경우
-        return claims.get("refresh") != null; // "refresh" 키가 존재하는지 확인
-    }
-    /**
-     * 보안상 accessToken보단 refreshToken을 쿠키에 보관하는것이 보안상 좋다해서 교체
-     * @param token
-     */
-    private Cookie createCookie(String token) {
-        Cookie cookie = new Cookie("refreshToken", token);
-        cookie.setHttpOnly(true); // HTTP-Only 설정
-        cookie.setSecure(false); // 개발 중이므로 false로 설정 (배포 시 true로 변경)
-        cookie.setPath("/"); // 경로 설정
-        cookie.setMaxAge(60 * 60 * 24 * 7);
-        return cookie;
     }
 }

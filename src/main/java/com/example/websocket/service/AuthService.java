@@ -57,7 +57,7 @@ public class AuthService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        JwtToken tokenDto = jwtTokenProvider.generateToken(authentication,response);
+        JwtToken tokenDto = jwtTokenProvider.generateToken(authentication);
 
         // 4. RefreshToken 저장
         RefreshToken refreshToken = RefreshToken.builder()
@@ -67,13 +67,15 @@ public class AuthService {
 
         refreshTokenRepository.save(refreshToken);
 
+        createCookie(response,tokenDto.getAccessToken());
+
         log.info("tokenDto={}",tokenDto);
         // 5. 토큰 발급
         return tokenDto;
     }
 
     @Transactional
-    public JwtToken reissue(TokenRequestDto tokenRequestDto,HttpServletResponse response) {
+    public JwtToken reissue(TokenRequestDto tokenRequestDto) {
         // 1. Refresh Token 검증
         if (!jwtTokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
             throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
@@ -92,7 +94,7 @@ public class AuthService {
         }
 
         // 5. 새로운 토큰 생성
-        JwtToken tokenDto = jwtTokenProvider.generateToken(authentication,response);
+        JwtToken tokenDto = jwtTokenProvider.generateToken(authentication);
 
         // 6. 저장소 정보 업데이트
         RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
@@ -101,5 +103,12 @@ public class AuthService {
         // 토큰 발급
         return tokenDto;
     }
-
+    public void createCookie(HttpServletResponse response, String token) {
+        Cookie cookie = new Cookie("accessToken",token);
+        cookie.setHttpOnly(true);  // JavaScript에서 접근 불가능하도록 설정
+        cookie.setSecure(true);    // HTTPS에서만 전송 (HTTPS 환경에서 권장)
+        cookie.setPath("/");       // 쿠키의 경로 설정
+        cookie.setMaxAge(60 * 60); // 쿠키 유효 기간 (예: 1시간)
+        response.addCookie(cookie); // 쿠키를 응답에 추가
+    }
 }
