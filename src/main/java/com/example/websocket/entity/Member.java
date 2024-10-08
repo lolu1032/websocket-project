@@ -24,10 +24,11 @@ public class Member {
     private Authority authority;
 
     @Builder
-    public Member(String email, String password, Authority authority) {
+    public Member(String email, String password, Authority authority,String name) {
         this.email = email;
         this.password = password;
         this.authority = authority;
+        this.name = name;
     }
     public enum Authority {
         ROLE_USER,ROLE_ADMIN

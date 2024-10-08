@@ -14,12 +14,18 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -41,6 +47,13 @@ public class AuthService {
          */
         if (memberRepository.existsByEmail(memberRequestDto.getEmail())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
+        }
+        /**
+         * 회원가입 유효성검사 칸
+         */
+        ResponseEntity<Map<String, Object>> validationResult = validation(memberRequestDto);
+        if (validationResult != null) {
+            throw new RuntimeException((String) validationResult.getBody().get("error"));
         }
 
         Member member = memberRequestDto.toMember(passwordEncoder);
@@ -103,12 +116,31 @@ public class AuthService {
         // 토큰 발급
         return tokenDto;
     }
-    public void createCookie(HttpServletResponse response, String token) {
+    private void createCookie(HttpServletResponse response, String token) {
         Cookie cookie = new Cookie("accessToken",token);
         cookie.setHttpOnly(true);  // JavaScript에서 접근 불가능하도록 설정
         cookie.setSecure(true);    // HTTPS에서만 전송 (HTTPS 환경에서 권장)
         cookie.setPath("/");       // 쿠키의 경로 설정
         cookie.setMaxAge(60 * 60); // 쿠키 유효 기간 (예: 1시간)
         response.addCookie(cookie); // 쿠키를 응답에 추가
+    }
+    private ResponseEntity<Map<String,Object>> validation(MemberRequestDto memberRequestDto) {
+        Map<String,Object> response = new HashMap<>();
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+        String nameRegex = "^[a-zA-Z가-힣]+$"; // 한글과 영어를 모두 허용
+
+        if (!memberRequestDto.getEmail().matches(emailRegex)) {
+            response.put("error", "유효하지 않은 이메일 형식입니다.");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } else if (!memberRequestDto.getPassword().matches(passwordRegex)) {
+            response.put("error", "유효하지 않은 비밀번호 형식입니다.");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } else if (!memberRequestDto.getName().matches(nameRegex)) {
+            response.put("error", "유효하지 않은 이름 형식입니다.");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        return null; // 모든 검증 통과
     }
 }
