@@ -25,8 +25,15 @@ public class ApiController {
     public ResponseEntity<?> signup(@RequestBody MemberRequestDto memberRequestDto) {
         try {
             authService.signup(memberRequestDto);
+            /**
+             * ResponseEntity.ok는 http상태코드 200 ok이다
+             */
             return ResponseEntity.ok(Map.of("message", "회원가입 성공"));
         } catch (RuntimeException e) {
+            /**
+             * badRequest 400의 본문을 Map.of형식으로 받는다 (JSON) 본문은 body로 받는다.
+             * body를 사용한이유는 본문이 여러개여서 사용했다.
+             */
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }

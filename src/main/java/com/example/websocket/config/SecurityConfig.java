@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless 세션 설정
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**","/chat/**","/login","/static/**", "/resources/**","/css/**").permitAll() // 인증 없이 접근 가능한 API
+                        .requestMatchers("/","/img/**","/auth/**","/chat/**","/login","/static/**", "/resources/**","/css/**").permitAll() // 인증 없이 접근 가능한 API
                         .anyRequest().authenticated()) // 나머지 API는 인증 필요
                 .formLogin((login) -> login
                         .loginPage("/login")

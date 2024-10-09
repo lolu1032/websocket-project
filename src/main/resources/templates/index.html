@@ -3,141 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Room</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            width: 300px;
-            margin: 0 auto;
-            padding-top: 50px;
-        }
-        #chat {
-            border: 1px solid #ccc;
-            height: 200px;
-            overflow-y: scroll;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        input, button {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-        }
-    </style>
+    <title>Document</title>
 </head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    ul {
+        list-style-type: none; /* 기본 목록 스타일 제거 */
+        padding: 0;
+        margin: 0;
+        display: flex; /* 가로 배치 */
+        gap: 20px; /* 항목 간격 */
+    }
+
+    li {
+        padding: 12px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    /* 버튼 스타일 추가 */
+    li a {
+        text-decoration: none; /* 밑줄 제거 */
+        font-size: 24px;
+        color: black;
+        font-weight: 800;
+    }
+
+
+</style>
 <body>
-<div class="container">
-    <h2>Chat Room</h2>
-    <label for="roomId">Enter Room Number:</label>
-    <input type="text" id="roomId" placeholder="Enter room number">
-
-    <label for="message">Your Message:</label>
-    <input type="text" id="message" placeholder="Type your message">
-
-    <button onclick="joinRoom()">Join Room</button>
-    <button onclick="leaveRoom()">Leave Room</button>
-
-    <div id="chat"></div>
-
-    <button onclick="sendMessage()">Send Message</button>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
-
-<script>
-    let stompClient = null;
-    let currentRoomId = null;
-    let currentSubscription = null;
-    const browserId = localStorage.getItem('browserId') || Math.random().toString(36).substring(2);
-    localStorage.setItem('browserId', browserId);
-
-    function connect() {
-        const socket = new SockJS('/chat');  // 서버의 WebSocket 엔드포인트
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function (frame) {
-            console.log("Connected to WebSocket: " + frame);
-            console.log("브라우저아이디 : " + browserId);
-
-            // 에러 메시지 처리
-            stompClient.subscribe('/topic/error', function (errorOutput) {
-                alert('Error: ' + errorOutput.body);
-            });
-        });
-    }
-
-    function joinRoom() {
-    const roomId = document.getElementById("roomId").value;
-
-    if (!roomId) {
-        alert("방 번호를 입력하세요.");
-        return;
-    }
-
-    stompClient.send("/api/checkRoom", {}, JSON.stringify({
-        roomId: roomId,
-        browserId: browserId  // 현재 브라우저의 ID를 함께 보냄
-    }));
-
-    stompClient.subscribe('/topic/roomCheck', function (response) {
-        const data = JSON.parse(response.body);
-        const roomExists = data.roomExists;
-        const responseBrowserId = data.browserId;
-
-        if (roomExists) {
-            if (currentSubscription) {
-                leaveRoom(); // 이전 방에서 구독 해제
-            }
-
-            currentRoomId = roomId;
-
-            currentSubscription = stompClient.subscribe(`/topic/messages/${roomId}`, function (message) {
-                const receivedMessage = JSON.parse(message.body);
-                const msg = receivedMessage.message;
-                const id = receivedMessage.browserId;
-                document.getElementById("chat").innerHTML += `<div>${id} : ${msg}</div>`;
-            });
-
-            // browserId가 현재 브라우저와 일치할 때만 'Joined Room' 메시지 출력
-            if (responseBrowserId === browserId) {
-                console.log(`Joined Room ${roomId}`);
-                document.getElementById("chat").innerHTML = `<div>Joined Room ${roomId}</div>`;
-            }
-
-        } else {
-            alert("해당 방은 존재하지 않습니다.");
-        }
-    });
-}
-
-
-    function leaveRoom() {
-        if (currentSubscription) {
-            currentSubscription.unsubscribe(); // unsubscribe()은 STOMP 클라이언트에서 현재 구독을 해제해줌
-            currentSubscription = null;
-            currentRoomId = null;
-        }
-    }
-
-    function sendMessage() {
-        const message = document.getElementById("message").value;
-        const roomId = currentRoomId;
-
-        if (roomId && message) {
-            stompClient.send("/api/sendMessage", {}, JSON.stringify({
-                roomId: roomId,
-                message: message,
-                browserId: browserId  // 고유 브라우저 ID 추가
-            }));
-            document.getElementById("message").value = "";  // 입력란 초기화
-        } else {
-            alert("방 번호와 메시지를 입력하세요.");
-        }
-    }
-
-    window.onload = connect;
-</script>
+<header style="width: 60%; margin:0 auto;">
+    <nav class="navbar_navbar__O41pd" style="display: flex; justify-content: space-between;">
+        <div class="navbar_navigation__P0M5v">
+            <a href="/"><img src="../img/Group 4 (1).png" alt="" style="width: 130px; padding: 12px;"></a>
+        </div>
+        <div class="navbar_loginElementWrapper__11CeH">
+            <!-- <a href="#"><img src="./img/Group 3.png" alt="" style="width: 120px; padding:12px;"></a> -->
+            <ul>
+                <li><a href="">사람구하기</a></li>
+                <li><a href="/login">로그인</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
 </body>
 </html>

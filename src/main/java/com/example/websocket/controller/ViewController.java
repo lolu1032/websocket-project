@@ -9,4 +9,8 @@ public class ViewController {
     public String login() {
         return "member/login";
     }
+    @GetMapping("/chat")
+    public String chat() {
+        return "chat";
+    }
 }

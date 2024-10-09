@@ -5,66 +5,114 @@
     <title>로그인</title>
     <link rel="stylesheet" href="../css/login.css">
 </head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    ul {
+        list-style-type: none; /* 기본 목록 스타일 제거 */
+        padding: 0;
+        margin: 0;
+        display: flex; /* 가로 배치 */
+        gap: 20px; /* 항목 간격 */
+    }
+
+    li {
+        padding: 15px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    /* 버튼 스타일 추가 */
+    li a {
+        text-decoration: none; /* 밑줄 제거 */
+        font-size: 24px;
+        color: black;
+        font-weight: 800;
+    }
+
+
+</style>
 <body>
-<div class="login-wrap">
-    <div class="login-html">
-        <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
-        <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
-        <div class="login-form">
-            <form id="loginForm">
-                <div class="sign-in-htm">
-                    <div class="group">
-                        <label for="loginEmail" class="label">Email</label>
-                        <input id="loginEmail" type="text" class="input" required>
+<div class="container">
+    <header style="width: 60%; margin:0 auto;">
+        <nav class="navbar_navbar__O41pd" style="display: flex; justify-content: space-between;">
+            <div class="navbar_navigation__P0M5v">
+                <a href="/"><img src="../img/Group 4 (1).png" alt="" style="width: 150px; padding: 12px;"></a>
+            </div>
+            <div class="navbar_loginElementWrapper__11CeH">
+                <!-- <a href="#"><img src="./img/Group 3.png" alt="" style="width: 120px; padding:12px;"></a> -->
+                <ul>
+                    <li><a href="">사람구하기</a></li>
+                    <li><a href="/login">로그인</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="login-wrap">
+        <div class="login-html">
+            <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
+            <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
+            <div class="login-form">
+                <form id="loginForm">
+                    <div class="sign-in-htm">
+                        <div class="group">
+                            <label for="loginEmail" class="label">Email</label>
+                            <input id="loginEmail" type="text" class="input" required>
+                        </div>
+                        <div class="error-message" id="loginEmailError"></div> <!-- 오류 메시지 표시 -->
+                        <div class="group">
+                            <label for="loginPassword" class="label">Password</label>
+                            <input id="loginPassword" type="password" class="input" required>
+                        </div>
+                        <div class="error-message" id="loginPasswordError"></div> <!-- 오류 메시지 표시 -->
+                        <div class="group">
+                            <input id="check" type="checkbox" class="check" checked>
+                            <label for="check"><span class="icon"></span> Keep me Signed in</label>
+                        </div>
+                        <div class="group">
+                            <input type="submit" class="button" value="Sign In">
+                        </div>
+                        <div class="hr"></div>
+                        <div class="foot-lnk">
+                            <a href="#forgot">Forgot Password?</a>
+                        </div>
                     </div>
-                    <div class="error-message" id="loginEmailError"></div> <!-- 오류 메시지 표시 -->
-                    <div class="group">
-                        <label for="loginPassword" class="label">Password</label>
-                        <input id="loginPassword" type="password" class="input" required>
+                </form>
+                <form id="signForm">
+                    <div class="sign-up-htm">
+                        <div class="group">
+                            <label for="email" class="label">Email</label>
+                            <input id="email" type="text" class="input">
+                        </div>
+                        <div style="font-size:14px; color:white; text-align:center">이메일 형식은 'example@domain.com'처럼 해주세요.</div>
+                        <div class="error-message" id="emailError"></div> <!-- 오류 메시지 표시 -->
+                        <div class="group">
+                            <label for="signPassword" class="label">Password</label>
+                            <input id="signPassword" type="password" class="input" data-type="password">
+                        </div>
+                        <div style="font-size:14px; color:white;">비밀번호는 대문자, 소문자, 숫자 및 특수문자를 포함해야 하며, 최소 8자 이상이어야 합니다.</div>
+                        <div class="error-message" id="signPasswordError"></div> <!-- 오류 메시지 표시 -->
+                        <div class="group">
+                            <label for="confirmPass" class="label">Repeat Password</label>
+                            <input id="confirmPass" type="password" class="input" data-type="password">
+                        </div>
+                        <div class="group">
+                            <label for="name" class="label">Name</label>
+                            <input id="name" type="text" class="input">
+                        </div>
+                        <div style="font-size:14px; color:white; text-align:center; padding-bottom : 5px;">이름은 한글 또는 영어로 이루어져야 합니다.</div>
+                        <div class="error-message" id="nameError"></div> <!-- 오류 메시지 표시 -->
+                        <div class="group">
+                            <input type="submit" class="button" value="Sign Up">
+                        </div>
                     </div>
-                    <div class="error-message" id="loginPasswordError"></div> <!-- 오류 메시지 표시 -->
-                    <div class="group">
-                        <input id="check" type="checkbox" class="check" checked>
-                        <label for="check"><span class="icon"></span> Keep me Signed in</label>
-                    </div>
-                    <div class="group">
-                        <input type="submit" class="button" value="Sign In">
-                    </div>
-                    <div class="hr"></div>
-                    <div class="foot-lnk">
-                        <a href="#forgot">Forgot Password?</a>
-                    </div>
-                </div>
-            </form>
-            <form id="signForm">
-                <div class="sign-up-htm">
-                    <div class="group">
-                        <label for="email" class="label">Email</label>
-                        <input id="email" type="text" class="input">
-                    </div>
-                    <div style="font-size:14px; color:white; text-align:center">이메일 형식은 'example@domain.com'처럼 해주세요.</div>
-                    <div class="error-message" id="emailError"></div> <!-- 오류 메시지 표시 -->
-                    <div class="group">
-                        <label for="signPassword" class="label">Password</label>
-                        <input id="signPassword" type="password" class="input" data-type="password">
-                    </div>
-                    <div style="font-size:14px; color:white;">비밀번호는 대문자, 소문자, 숫자 및 특수문자를 포함해야 하며, 최소 8자 이상이어야 합니다.</div>
-                    <div class="error-message" id="signPasswordError"></div> <!-- 오류 메시지 표시 -->
-                    <div class="group">
-                        <label for="confirmPass" class="label">Repeat Password</label>
-                        <input id="confirmPass" type="password" class="input" data-type="password">
-                    </div>
-                    <div class="group">
-                        <label for="name" class="label">Name</label>
-                        <input id="name" type="text" class="input">
-                    </div>
-                    <div style="font-size:14px; color:white; text-align:center; padding-bottom : 5px;">이름은 한글 또는 영어로 이루어져야 합니다.</div>
-                    <div class="error-message" id="nameError"></div> <!-- 오류 메시지 표시 -->
-                    <div class="group">
-                        <input type="submit" class="button" value="Sign Up">
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>
