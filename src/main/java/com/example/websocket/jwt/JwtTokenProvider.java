@@ -1,11 +1,9 @@
-package com.example.websocket.security;
+package com.example.websocket.jwt;
 
 import com.example.websocket.dto.JwtToken;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,7 +37,6 @@ public class JwtTokenProvider {
                 .map(GrantedAuthority::getAuthority) // 각 권한을 문자열로 반환한다.
                 .collect(Collectors.joining(",")); // 권한들을 ,로 구분한다 ROLE_USER,ROLE_ADMIN
         if (authorities.isEmpty()) {
-            log.error("사용자에게 권한이 없습니다.");
             throw new RuntimeException("권한 정보가 없습니다.");
         }
 

@@ -1,4 +1,4 @@
-package com.example.websocket.security;
+package com.example.websocket.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;

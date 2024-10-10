@@ -30,11 +30,6 @@ public class ChatController {
         this.chatRoomRepository = chatRoomRepository;
         this.redisSubscriber = redisSubscriber;
     }
-    @GetMapping("/")
-    public String main() {
-        return "index";
-    }
-
     // 클라에서 방을 생성하면 JPA로 인해 디비에 방을 생성하는 역할을 한다.
     @MessageMapping("/createRoom")
     @SendTo("/topic/roomCreated")

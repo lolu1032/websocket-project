@@ -1,4 +1,4 @@
-package com.example.websocket.security;
+package com.example.websocket.jwt;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

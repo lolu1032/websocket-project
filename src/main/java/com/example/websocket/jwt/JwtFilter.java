@@ -1,4 +1,4 @@
-package com.example.websocket.security;
+package com.example.websocket.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -33,7 +33,6 @@ public class JwtFilter extends OncePerRequestFilter {
          * jwtTokenProvider.validateToken(jwt)
          * JWT옳은지 검증한다.
          */
-        log.info("jwt={}",jwt);
         if(StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
             Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);

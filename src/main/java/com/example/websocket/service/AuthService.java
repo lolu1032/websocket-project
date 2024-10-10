@@ -8,9 +8,10 @@ import com.example.websocket.dto.MemberResponseDto;
 import com.example.websocket.dto.TokenRequestDto;
 import com.example.websocket.entity.Member;
 import com.example.websocket.entity.RefreshToken;
-import com.example.websocket.security.JwtTokenProvider;
+import com.example.websocket.jwt.JwtTokenProvider;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -116,6 +117,10 @@ public class AuthService {
         // 토큰 발급
         return tokenDto;
     }
+    public boolean isAuthenticated(HttpServletRequest request) {
+        String accessToken = getJwtFromCookies(request);
+        return accessToken != null; // null이 아니라면 true null이라면 false
+    }
     private void createCookie(HttpServletResponse response, String token) {
         Cookie cookie = new Cookie("accessToken",token);
         cookie.setHttpOnly(true);  // JavaScript에서 접근 불가능하도록 설정
@@ -142,5 +147,16 @@ public class AuthService {
         }
 
         return null; // 모든 검증 통과
+    }
+    // 쿠키에서 JWT를 추출하는 메서드
+    private String getJwtFromCookies(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("accessToken".equals(cookie.getName())) {
+                    return cookie.getValue();  // accessToken 값 반환
+                }
+            }
+        }
+        return null;  // 쿠키에 accessToken이 없을 경우
     }
 }

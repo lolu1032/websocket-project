@@ -1,4 +1,4 @@
-package com.example.websocket.security;
+package com.example.websocket.jwt;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

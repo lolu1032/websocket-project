@@ -5,25 +5,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Room</title>
     <style>
+        /* 전체 레이아웃을 위한 폰트 및 배경색 */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
+
+        /* 메인 컨테이너 */
         .container {
-            width: 300px;
-            margin: 0 auto;
-            padding-top: 50px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
         }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            font-weight: 600;
+        }
+
+        label {
+            font-size: 14px;
+            color: #666;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #6a5acd;
+            box-shadow: 0 0 5px rgba(106, 90, 205, 0.4);
+        }
+
+        button {
+            background-color: #6a5acd;
+            color: white;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #483d8b;
+        }
+
         #chat {
-            border: 1px solid #ccc;
+            border: 1px solid #ddd;
+            border-radius: 8px;
             height: 200px;
             overflow-y: scroll;
             padding: 10px;
-            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            margin-bottom: 15px;
+            font-size: 14px;
         }
-        input, button {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
+
+        #chat div {
+            padding: 5px 0;
+            color: #333;
+        }
+
+        /* 스크롤바 디자인 */
+        #chat::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #chat::-webkit-scrollbar-thumb {
+            background-color: #6a5acd;
+            border-radius: 10px;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                width: 90%;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            input, button {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -69,49 +153,48 @@
     }
 
     function joinRoom() {
-    const roomId = document.getElementById("roomId").value;
+        const roomId = document.getElementById("roomId").value;
 
-    if (!roomId) {
-        alert("방 번호를 입력하세요.");
-        return;
-    }
-
-    stompClient.send("/api/checkRoom", {}, JSON.stringify({
-        roomId: roomId,
-        browserId: browserId  // 현재 브라우저의 ID를 함께 보냄
-    }));
-
-    stompClient.subscribe('/topic/roomCheck', function (response) {
-        const data = JSON.parse(response.body);
-        const roomExists = data.roomExists;
-        const responseBrowserId = data.browserId;
-
-        if (roomExists) {
-            if (currentSubscription) {
-                leaveRoom(); // 이전 방에서 구독 해제
-            }
-
-            currentRoomId = roomId;
-
-            currentSubscription = stompClient.subscribe(`/topic/messages/${roomId}`, function (message) {
-                const receivedMessage = JSON.parse(message.body);
-                const msg = receivedMessage.message;
-                const id = receivedMessage.browserId;
-                document.getElementById("chat").innerHTML += `<div>${id} : ${msg}</div>`;
-            });
-
-            // browserId가 현재 브라우저와 일치할 때만 'Joined Room' 메시지 출력
-            if (responseBrowserId === browserId) {
-                console.log(`Joined Room ${roomId}`);
-                document.getElementById("chat").innerHTML = `<div>Joined Room ${roomId}</div>`;
-            }
-
-        } else {
-            alert("해당 방은 존재하지 않습니다.");
+        if (!roomId) {
+            alert("방 번호를 입력하세요.");
+            return;
         }
-    });
-}
 
+        stompClient.send("/api/checkRoom", {}, JSON.stringify({
+            roomId: roomId,
+            browserId: browserId  // 현재 브라우저의 ID를 함께 보냄
+        }));
+
+        stompClient.subscribe('/topic/roomCheck', function (response) {
+            const data = JSON.parse(response.body);
+            const roomExists = data.roomExists;
+            const responseBrowserId = data.browserId;
+
+            if (roomExists) {
+                if (currentSubscription) {
+                    leaveRoom(); // 이전 방에서 구독 해제
+                }
+
+                currentRoomId = roomId;
+
+                currentSubscription = stompClient.subscribe(`/topic/messages/${roomId}`, function (message) {
+                    const receivedMessage = JSON.parse(message.body);
+                    const msg = receivedMessage.message;
+                    const id = receivedMessage.browserId;
+                    document.getElementById("chat").innerHTML += `<div>${id} : ${msg}</div>`;
+                });
+
+                // browserId가 현재 브라우저와 일치할 때만 'Joined Room' 메시지 출력
+                if (responseBrowserId === browserId) {
+                    console.log(`Joined Room ${roomId}`);
+                    document.getElementById("chat").innerHTML = `<div>Joined Room ${roomId}</div>`;
+                }
+
+            } else {
+                alert("해당 방은 존재하지 않습니다.");
+            }
+        });
+    }
 
     function leaveRoom() {
         if (currentSubscription) {
