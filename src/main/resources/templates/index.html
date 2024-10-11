@@ -13,42 +13,92 @@
 <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
 <script src="../js/main.js"></script>
 <body>
-    <header class="header">
-        <nav class="navbar_navbar__O41pd">
-            <div class="navbar_navigation__P0M5v">
-                <a href="/"><img src="../img/Group 4 (1).png" alt="" class="logo"></a>
-            </div>
-            <div class="navbar_loginElementWrapper__11CeH">
-                <!-- <a href="#"><img src="./img/Group 3.png" alt="" style="width: 120px; padding:12px;"></a> -->
-                <ul class="header-ul">
-                    <li class="header-li"><a class="head-li-a" href="#">사람구하기</a></li>
-                    <li class="header-li" th:if="${isLogin == false}"><a class="head-li-a" href="/login">로그인</a></li>
-                    <li class="header-li" th:if="${isLogin != false}"><a class="head-li-a" href="#">프로필</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-    <div class="slide-content">
-        <div class="swiper mySwiper">
-            <!-- Additional required wrapper -->
-            <div class="swiper-wrapper">
-                <!-- Slides -->
-                <div class="swiper-slide"><img class="slide-page" src="../img/Group 9.png"  alt=""></div>
-                <div class="swiper-slide"><img class="slide-page" src="../img/Group 6.png" alt=""></div>
-                <div class="swiper-slide"><img class="slide-page" src="../img/Group 6 (1).png"></div>
-            </div>
-            <!-- If we need pagination -->
-            <div class="swiper-pagination"></div>
+<header class="header">
+    <nav class="navbar_navbar__O41pd">
+        <div class="navbar_navigation__P0M5v">
+            <a href="/"><img src="../img/Group 4 (1).png" alt="" class="logo"></a>
+        </div>
+        <div class="navbar_loginElementWrapper__11CeH">
+            <!-- <a href="#"><img src="./img/Group 3.png" alt="" style="width: 120px; padding:12px;"></a> -->
+            <ul class="header-ul">
+                <li class="header-li"><a class="head-li-a" href="#">사람구하기</a></li>
+                <li class="header-li" th:if="${isLogin == false}"><a class="head-li-a" href="/login">로그인</a></li>
+                <li class="header-li" th:if="${isLogin != false}"><a class="head-li-a" href="#">프로필</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<div class="slide-content">
+    <div class="swiper mySwiper">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+            <!-- Slides -->
+            <div class="swiper-slide"><img class="slide-page" src="../img/Group 5.png"  alt=""></div>
+            <div class="swiper-slide"><img class="slide-page" src="../img/Group 5.png" alt=""></div>
+            <div class="swiper-slide"><img class="slide-page" src="../img/Group 5 (1).png"></div>
+        </div>
+        <!-- If we need pagination -->
+        <div class="swiper-pagination"></div>
 
-            <!-- If we need navigation buttons -->
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
+        <!-- If we need navigation buttons -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+</div>
+<div>
+    <div class="recruitment-post">
+        <h2>모집글</h2>
+    </div>
+    <div class="recruitment-sel">
+        <select class="sel-options" name="" id="">
+            <option value="">전체</option>
+            <option value="">스터디</option>
+            <option value="">프로젝트</option>
+        </select>
+    </div>
+    <div class="post">
+        <div class="post-container">
+            <div class="post-title">
+                <h1 class="title">123</h1>
+            </div>
+            <div class="post-content">
+                <p class="content">asdasdasdasdasd</p>
+            </div>
+        </div>
+        <div class="post-container">
+            <div class="post-title">
+                <h1 class="title">123</h1>
+            </div>
+            <div class="post-content">
+                <p class="content">asdasdasdasdasd</p>
+            </div>
+        </div>
+        <div class="post-container">
+            <div class="post-title">
+                <h1 class="title">123</h1>
+
+            </div>
+            <div class="post-content">
+                <p class="content">asdasdasdasdasd</p>
+            </div>
+        </div>
+        <div class="post-container">
+            <div class="post-title">
+                <h1 class="title">123</h1>
+            </div>
+            <div class="post-content">
+                <p class="content">asdasdasdasdasd</p>
+            </div>
+        </div>
+        <div class="post-container">
+            <div class="post-title">
+                <h1 class="title">123</h1>
+            </div>
+            <div class="post-content">
+                <p class="content">asdasdasdasdasd</p>
+            </div>
         </div>
     </div>
-    <div>
-        <div class="recruitment-post">
-            <h2>모집글</h2>
-        </div>
-    </div>
+</div>
 </body>
 </html>
