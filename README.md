@@ -1,3 +1,9 @@
+# 2024-10-11
+## 메인화면
+![메인화면](https://github.com/user-attachments/assets/fb445fde-2f15-401d-96f4-6384e6680bf5)
+### 로고와 슬라이드 이미지는 직접 피그마로 만들었습니다.
+![피그마](https://github.com/user-attachments/assets/04171f52-a73c-43f9-a947-cc415ae80601)
+
 # 2024-10-09
 ## 로그인 화면 메인 화면
 ![메인](https://github.com/user-attachments/assets/8fd55928-746b-4b5b-90bd-4eb664691c5b)
