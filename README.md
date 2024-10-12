@@ -1,10 +1,10 @@
 # 2024-10-12
 ## 메인화면 
-![메인페이지.PNG](..%2F..%2FUsers%2Fsoowk%2FOneDrive%2F%EB%B0%94%ED%83%95%20%ED%99%94%EB%A9%B4%2F%EC%9B%B9%EC%86%8C%EC%BA%A3%2F%EB%A9%94%EC%9D%B8%ED%8E%98%EC%9D%B4%EC%A7%80.PNG)
+![메인페이지](https://github.com/user-attachments/assets/8370f255-27bb-4adf-aa78-3c42e60377a2)
 ### 게시글 작성 시 모집글들을 만들었습니다.
 ## 내일 할 것
 ### 페이징 처리를 할 것이며 메인 페이지 최종 모습은 이 사진입니다.
-![Group 10.png](..%2F..%2FUsers%2Fsoowk%2FOneDrive%2F%EB%B0%94%ED%83%95%20%ED%99%94%EB%A9%B4%2F%EC%9B%B9%EC%86%8C%EC%BA%A3%2FGroup%2010.png)
+![Group 10](https://github.com/user-attachments/assets/0d693421-d83e-4cd8-b3b0-28b1f3a1889c)
 # 2024-10-11
 ## 메인화면
 ![메인화면](https://github.com/user-attachments/assets/fb445fde-2f15-401d-96f4-6384e6680bf5)
