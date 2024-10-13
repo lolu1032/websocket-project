@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment = "paging">
+    <nav class="paging">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${postPage.hasPrevious()} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{/posts(page=${postPage.number - 1})}">이전</a>
+            </li>
+
+            <th:block th:each="pageNumber : ${pageNumbers}">
+                <li class="page-item" th:classappend="${pageNumber - 1 == postPage.number} ? 'active' : ''">
+                    <a class="page-link" th:href="@{/posts(page=${pageNumber - 1})}" th:text="${pageNumber}"></a>
+                </li>
+            </th:block>
+
+            <li class="page-item" th:classappend="${postPage.hasNext()} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{/posts(page=${postPage.number + 1})}">다음</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>

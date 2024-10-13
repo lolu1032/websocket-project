@@ -27,11 +27,13 @@ public class SecurityConfig {
             "/",
             "/img/**",
             "/auth/**",
+            "/api/**",
             "/login",
             "/static/**",
             "/resources/**",
             "/css/**",
-            "/js/**"
+            "/js/**",
+            "/posts/**"
     };
 
     @Bean
