@@ -1,3 +1,7 @@
+# 2024-10-13
+## 메인화면 페이징 처리
+![페이징처리](https://github.com/user-attachments/assets/aebaa132-a205-4d65-967d-cf625962f35b)
+
 # 2024-10-12
 ## 메인화면 
 ![메인페이지](https://github.com/user-attachments/assets/8370f255-27bb-4adf-aa78-3c42e60377a2)
