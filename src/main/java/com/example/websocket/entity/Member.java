@@ -34,3 +34,4 @@ public class Member {
         ROLE_USER,ROLE_ADMIN
     }
 }
+

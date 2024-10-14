@@ -1,11 +1,13 @@
 package com.example.websocket.jwt;
 
+import com.example.websocket.config.RedisConfig;
 import com.example.websocket.dto.JwtToken;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -27,9 +30,15 @@ public class JwtTokenProvider {
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
     private final Key key; // JWT 서명을 위한 key 객체 선언
 
-    public JwtTokenProvider(@Value("${security.token}") String securitKey) {
+    /**
+     * StringRedisTemplate은 Spring FrameWork에서 제공하는 RedisTemplate의 문자열 버전
+     */
+    private final StringRedisTemplate redisTemplate;
+
+    public JwtTokenProvider(@Value("${security.token}") String securitKey, StringRedisTemplate redisTemplate) {
         byte[] keyBytes = Decoders.BASE64.decode(securitKey); // Base64로 인코딩된 securitKey 디코딩
         this.key = Keys.hmacShaKeyFor(keyBytes); // securitKey를 이용하여 key객체 생성
+        this.redisTemplate = new StringRedisTemplate();
     }
 
     public JwtToken generateToken(Authentication authentication) {
@@ -59,6 +68,10 @@ public class JwtTokenProvider {
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
+        /**
+         * opsForValue()는 문자열 값을 다루기 위한 연산을 수행하는 ValueOperations 객체를 반환한다. 키-값 쌍으로 데이터를 저장 조회 가능
+         */
+        redisTemplate.opsForValue().set(authentication.getName(), refreshToken, REFRESH_TOKEN_EXPIRE_TIME, TimeUnit.MILLISECONDS);
 
         return JwtToken.builder()
                 .grentType(BEARER_TYPE)

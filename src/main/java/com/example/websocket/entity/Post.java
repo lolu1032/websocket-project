@@ -23,6 +23,9 @@ public class Post {
      */
     @Lob
     private String content;
+    private String category;
+    private String language;
+    private int count;
     /**
      *    @ManyToOne(fetch = FetchType.LAZY) 다대일 관계를 나타낸다. 지연로딩은 사용자가 직접 데이터에 접근할 때 데이터베이스에서 정보를 빼온다
      */
