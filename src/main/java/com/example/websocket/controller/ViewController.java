@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -53,7 +54,7 @@ public class ViewController {
 
         return "index";
     }
-    @GetMapping("login")
+    @GetMapping("/login")
     public String login(HttpServletRequest request, Model model) {
         boolean isLogin = authService.isAuthenticated(request);
         log.info("isLogin={}",isLogin);
@@ -63,5 +64,12 @@ public class ViewController {
     @GetMapping("/chat")
     public String chat() {
         return "chat";
+    }
+
+    @GetMapping("/post/{id}")
+    public String post(@PathVariable(name = "id") String id,HttpServletRequest request, Model model) {
+        boolean isLogin = authService.isAuthenticated(request);
+        model.addAttribute("isLogin",isLogin);
+        return "post/post";
     }
 }

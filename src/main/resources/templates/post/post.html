@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<link rel="stylesheet" href="../css/post.css">
+<link rel="stylesheet" href="../css/header.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
+<script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+<script src="../js/fetchWithAuth.js"></script>
+<script src="../js/main.js"></script>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="content">
+    <div class="post-header">
+        <div class="head-top">
+            <select class="head-post" name="" id="">
+                <option value="">스터디</option>
+                <option value="">프로젝트</option>
+            </select>
+            <input class="header-type" type="text">
+        </div>
+        <div class="head-mid">
+            <label for="" class="count">인원수 : </label>
+            <input type="text" class="header-count">
+            <label for="" class="date">기한</label>
+            <input type="date" class="header-date">
+        </div>
+        <div class="heed-foot">
+            <label for="" class="postion">포지션</label>
+            <input type="text" class="header-position">
+            <label for="" class="language">언어</label>
+            <input type="text" class="header-language" placeholder="언어 선택" id="languageInput">
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div id="languageModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>언어 선택</h3>
+        <label class="values">프론트엔드</label>
+        <div class="front-content">
+            <input type="checkbox" name="role" value="React">React
+            <input type="checkbox" name="role" value="Vue"> Vue.js
+            <input type="checkbox" name="role" value="Svelte"> Svelte
+            <input type="checkbox" name="role" value="Angular"> Angular
+        </div>
+        <label class="values">백엔드</label>
+        <div class="back-content">
+            <input type="checkbox" name="role" value="Java">Java
+            <input type="checkbox" name="role" value="Node"> Node.js
+            <input type="checkbox" name="role" value="Ruby"> Ruby
+            <input type="checkbox" name="role" value="Go"> Go
+            <input type="checkbox" name="role" value="python"> python
+            <input type="checkbox" name="role" value="kotlin"> kotlin
+        </div>
+        <label class="values">기타</label>
+        <div class="etc-content">
+            <input type="checkbox" name="role" value="Figma">Figma
+            <input type="checkbox" name="role" value="Photoshop">Photoshop
+            <input type="checkbox" name="role" value="Illustrator">Illustrator
+        </div>
+        <div class="btn">
+            <button class="save-btn">저장</button>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    // 언어 입력 필드를 클릭하면 모달을 표시
+    const languageInput = document.getElementById('languageInput');
+    const modal = document.getElementById('languageModal');
+    const closeBtn = document.querySelector('.close-btn');
+    const radios = document.querySelectorAll('input[name="role"]');
+
+    languageInput.addEventListener('click', () => {
+        modal.style.display = 'block'; // 모달 표시
+    });
+
+    // 모달 닫기 버튼 클릭 시 모달 숨기기
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    // 모달 외부 클릭 시 모달 숨기기
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+</script>
+</html>
