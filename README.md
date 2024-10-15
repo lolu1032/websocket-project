@@ -1,3 +1,10 @@
+# 2024-10-15
+## 게시글 상세페이지
+![게시글](https://github.com/user-attachments/assets/62a84483-41ae-40df-bc8e-3d1de7f0052f)
+![게시글 모달](https://github.com/user-attachments/assets/5eab1eb2-53f0-4c4c-88fb-6307b107e823)
+## 스토리보드
+![게시글 스토리보드](https://github.com/user-attachments/assets/c34a126d-3c21-4771-b853-df4d0d57d632)
+### 게시글 하단은 마크업 에디터 라이브러리를 사용해서 넣을 예정이다.
 # 2024-10-13
 ## 메인화면 페이징 처리
 ![페이징처리](https://github.com/user-attachments/assets/aebaa132-a205-4d65-967d-cf625962f35b)
