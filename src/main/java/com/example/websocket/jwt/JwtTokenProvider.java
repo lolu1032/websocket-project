@@ -38,7 +38,7 @@ public class JwtTokenProvider {
     public JwtTokenProvider(@Value("${security.token}") String securitKey, StringRedisTemplate redisTemplate) {
         byte[] keyBytes = Decoders.BASE64.decode(securitKey); // Base64로 인코딩된 securitKey 디코딩
         this.key = Keys.hmacShaKeyFor(keyBytes); // securitKey를 이용하여 key객체 생성
-        this.redisTemplate = new StringRedisTemplate();
+        this.redisTemplate = redisTemplate;
     }
 
     public JwtToken generateToken(Authentication authentication) {

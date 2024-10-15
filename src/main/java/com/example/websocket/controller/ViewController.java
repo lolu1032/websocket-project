@@ -26,8 +26,6 @@ public class ViewController {
     private final PostService postService;
     @GetMapping(value = {"/","/posts"})
     public String main(@RequestParam(value = "page", defaultValue = "0") int page, HttpServletRequest request, Model model) {
-        boolean isLogin = authService.isAuthenticated(request);
-        model.addAttribute("isLogin",isLogin);
         Page<Post> postPage = postService.finalAll(PageRequest.of(page, 15)); // 페이지 요청 설정
         model.addAttribute("postPage", postPage);
         // 현재 페이지와 총 페이지 수를 계산
@@ -55,10 +53,7 @@ public class ViewController {
         return "index";
     }
     @GetMapping("/login")
-    public String login(HttpServletRequest request, Model model) {
-        boolean isLogin = authService.isAuthenticated(request);
-        log.info("isLogin={}",isLogin);
-        model.addAttribute("isLogin",isLogin);
+    public String login() {
         return "member/login";
     }
     @GetMapping("/chat")
@@ -67,9 +62,7 @@ public class ViewController {
     }
 
     @GetMapping("/post/{id}")
-    public String post(@PathVariable(name = "id") String id,HttpServletRequest request, Model model) {
-        boolean isLogin = authService.isAuthenticated(request);
-        model.addAttribute("isLogin",isLogin);
+    public String post(@PathVariable(name = "id") String id) {
         return "post/post";
     }
 }
