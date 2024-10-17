@@ -43,8 +43,8 @@ public class ViewController {
         return "chat";
     }
 
-    @GetMapping("/post/{id}")
-    public String post(@PathVariable(name = "id") String id) {
+    @GetMapping("/post")
+    public String post() {
         return "post/post";
     }
 }

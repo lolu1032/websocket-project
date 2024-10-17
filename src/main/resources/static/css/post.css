@@ -38,13 +38,13 @@
     justify-content: space-between; /* 요소들이 양 끝에 배치되도록 */
     align-items: center;
 }
-.head-post {
+#head-post {
     width: 15%;
 }
-.count {
+#count {
     width: 15%;
 }
-.date,.language {
+#date,#language {
     padding: 10px;
 }
 select, input {
