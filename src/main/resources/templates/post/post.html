@@ -109,7 +109,7 @@
                     cache: false,
                     timeout: 600000,
                     success: function(data) {
-                        const url = '/files/uploads/' + data.fileName;
+                        const url = '/files/uploads/' + encodeURIComponent(data.fileName); // URL 인코딩 추가
                         callback(url, '사진 대체 텍스트 입력');
 
                         // 이미지 표시

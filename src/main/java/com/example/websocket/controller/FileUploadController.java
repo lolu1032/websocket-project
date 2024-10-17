@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,7 +34,11 @@ public class FileUploadController {
             Files.createDirectories(filePath.getParent()); // 디렉토리 생성
             Files.write(filePath, file.getBytes());
 
-            return ResponseEntity.ok().body(new FileUploadResponse(fileName));
+            // URL 인코딩
+            String encodedFileName = URLEncoder.encode(fileName, "UTF-8"); // 파일 이름 인코딩
+            String fileUrl = "/files/uploads/" + encodedFileName; // 인코딩된 파일 이름 사용
+
+            return ResponseEntity.ok().body(new FileUploadResponse(fileName, fileUrl));
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 저장 중 오류 발생");
         }
@@ -54,17 +59,22 @@ public class FileUploadController {
         }
     }
 
-
     // 파일 업로드 응답 클래스
     static class FileUploadResponse {
         private String fileName;
+        private String fileUrl;
 
-        public FileUploadResponse(String fileName) {
+        public FileUploadResponse(String fileName, String fileUrl) {
             this.fileName = fileName;
+            this.fileUrl = fileUrl;
         }
 
         public String getFileName() {
             return fileName;
+        }
+
+        public String getFileUrl() {
+            return fileUrl;
         }
     }
 }
