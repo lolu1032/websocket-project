@@ -1,3 +1,7 @@
+# 2024-10-18
+## 게시글 작성
+![dlalwl](https://github.com/user-attachments/assets/5c5606f3-b97e-488c-8373-c9d45421d0f8)
+
 # 2024-10-15
 ## 게시글 상세페이지
 ![게시글](https://github.com/user-attachments/assets/62a84483-41ae-40df-bc8e-3d1de7f0052f)
