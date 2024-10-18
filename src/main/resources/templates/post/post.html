@@ -94,12 +94,15 @@
             }
         },
         hooks: {
+        // blob 업로드할 이미지 파일, callback : 업로드 후 호출 함수
             addImageBlobHook: (blob, callback) => {
+            // 업로드한 파일을 서버로 전송하기 위해 FormData 객체 생성 이미지를 추가
                 const formData = new FormData();
                 formData.append('file', blob);
 
                 $.ajax({
                     type: 'POST',
+                    // 파일 업로드를 포함한 데이터 전송에 사용됩니다.
                     enctype: 'multipart/form-data',
                     url: '/files/upload',
                     data: formData,
@@ -113,6 +116,7 @@
                         callback(url, '사진 대체 텍스트 입력');
 
                         // 이미지 표시
+                        // displayUploadedImage(url) 함수를 호출하여 웹 페이지에 업로드된 이미지를 표시합니다.
                         displayUploadedImage(url); // 업로드된 이미지를 표시하는 함수 호출
                     },
                     error: function(e) {
