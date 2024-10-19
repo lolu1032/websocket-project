@@ -40,6 +40,9 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes); // securitKey를 이용하여 key객체 생성
         this.redisTemplate = redisTemplate;
     }
+    public StringRedisTemplate getRedisTemplate() {
+        return redisTemplate;
+    }
 
     public JwtToken generateToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream() // Authentication에서 제공해주는 권한 생성

@@ -87,7 +87,6 @@ public class AuthService {
         // 5. 토큰 발급
         return tokenDto;
     }
-
     @Transactional
     public JwtToken reissue(TokenRequestDto tokenRequestDto) {
         // 1. Refresh Token 검증
@@ -117,16 +116,40 @@ public class AuthService {
         // 토큰 발급
         return tokenDto;
     }
-    public boolean isAuthenticated(HttpServletRequest request) {
+
+    @Transactional
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+        // 1. 쿠키에서 AccessToken 삭제
+        Cookie cookie = new Cookie("accessToken", null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0); // 쿠키 삭제를 위해 유효 기간을 0으로 설정
+        response.addCookie(cookie);
+
+        // 2. 쿠키에서 JWT AccessToken 추출
         String accessToken = getJwtFromCookies(request);
-        return accessToken != null; // null이 아니라면 true null이라면 false
+
+        if (accessToken != null && jwtTokenProvider.validateToken(accessToken)) {
+            // 3. AccessToken으로부터 사용자 정보 가져오기
+            Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+
+            // 4. Redis에서 RefreshToken 삭제
+            String userId = authentication.getName();
+            jwtTokenProvider.getRedisTemplate().delete(userId); // Redis에서 RefreshToken 삭제
+
+            log.info("User {} logged out successfully", userId);
+        } else {
+            log.warn("No valid access token found for logout");
+        }
     }
+
     private void createCookie(HttpServletResponse response, String token) {
         Cookie cookie = new Cookie("accessToken",token);
         cookie.setHttpOnly(true);  // JavaScript에서 접근 불가능하도록 설정
         cookie.setSecure(true);    // HTTPS에서만 전송 (HTTPS 환경에서 권장)
         cookie.setPath("/");       // 쿠키의 경로 설정
-        cookie.setMaxAge(1000 * 60 * 30); // 쿠키 유효 기간 (예: 1시간)
+        cookie.setMaxAge(60); // 쿠키 유효 기간 (예: 1시간)
         response.addCookie(cookie); // 쿠키를 응답에 추가
     }
     private ResponseEntity<Map<String,Object>> validation(MemberRequestDto memberRequestDto) {

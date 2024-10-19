@@ -17,7 +17,7 @@
             <ul class="header-ul">
                 <li class="header-li"><a class="head-li-a" href="/post">사람구하기</a></li>
                 <li class="header-li" sec:authorize="isAnonymous()"><a class="head-li-a" href="/login">로그인</a></li>
-                <li class="header-li" sec:authorize="isAuthenticated()"><a class="head-li-a" href="#">프로필</a></li>
+                <li class="header-li" sec:authorize="isAuthenticated()"><a class="head-li-a" id="logoutBtn" href="/">로그아웃</a></li>
             </ul>
         </div>
     </nav>

@@ -25,7 +25,7 @@ public class SecurityConfig {
 
     private static final String[] AUTH_LIST = {
             "/",
-            "/**",
+//            "/**",
             "/img/**",
             "/auth/**",
             "/api/**",
@@ -35,7 +35,7 @@ public class SecurityConfig {
             "/css/**",
             "/js/**",
             "/posts/**",
-            "/post/**",
+//            "/post/**",
     };
 
     @Bean
