@@ -136,4 +136,9 @@ public class JwtTokenProvider {
             return e.getClaims();
         }
     }
+    public String getUserIdFromToken(String token) {
+        Claims claims = parseClaims(token);
+        return claims.getSubject(); // 사용자 ID가 'sub' 필드에 저장된 경우
+    }
+
 }

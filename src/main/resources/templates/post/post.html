@@ -19,31 +19,32 @@
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
 <div class="content">
-    <div class="post-header">
-        <div class="head-top">
-            <select class="head-post" name="head-post" id="head-post">
-                <option value="스터디">스터디</option>
-                <option value="프로젝트">프로젝트</option>
-            </select>
-            <input class="header-type" type="text">
+    <form id="postForm">
+        <div class="post-header">
+            <div class="head-top">
+                <select class="head-post" name="head-post" id="head-post">
+                    <option value="스터디">스터디</option>
+                    <option value="프로젝트">프로젝트</option>
+                </select>
+                <input class="header-type" type="text" name="head-title">
+            </div>
+            <div class="head-mid">
+                <label for="count" id="count">인원수</label>
+                <input type="number" class="header-count" name="head-count">
+                <label for="date" id="date">기한</label>
+                <input type="date" class="header-date" name="head-date">
+            </div>
+            <div class="heed-foot">
+                <label for="postion" id="postion">포지션</label>
+                <input type="text" class="header-position" name="head-position">
+                <label for="language" id="language">언어</label>
+                <input type="text" class="header-language" placeholder="언어 선택" id="languageInput" name="head-language">
+            </div>
         </div>
-        <div class="head-mid">
-            <label for="count" id="count">인원수</label>
-            <input type="text" class="header-count">
-            <label for="date" id="date">기한</label>
-            <input type="date" class="header-date">
-        </div>
-        <div class="heed-foot">
-            <label for="postion" id="postion">포지션</label>
-            <input type="text" class="header-position">
-            <label for="language" id="language">언어</label>
-            <input type="text" class="header-language" placeholder="언어 선택" id="languageInput">
-        </div>
-    </div>
-    <div id="editor"></div>
-
-    <!-- 업로드된 이미지 표시 영역 -->
-    <div id="uploadedImages" class="uploaded-images"></div>
+        <div id="editor"></div>
+        <input type="hidden" name="content" id="editorContent">
+        <input type="submit" value="저장">
+    </form>
 </div>
 
 <!-- Modal -->
@@ -174,6 +175,47 @@
         imgElement.style.margin = '5px'; // 여백 조절
         uploadedImagesContainer.appendChild(imgElement); // 이미지 추가
     }
+document.getElementById('postForm').addEventListener('submit', function(event) {
+    event.preventDefault();  // 폼 제출 시 페이지 새로고침 방지
+
+    const formData = new FormData(this); // 폼 데이터 수집
+
+    // TOAST UI 에디터에서 마크다운 내용 가져와서 'content' 필드에 추가
+    const markdownContent = editor.getMarkdown();
+    formData.append('content', markdownContent);
+
+    // head-count 값이 숫자가 아니면 기본값을 설정하거나 오류 처리
+    let headCount = formData.get('head-count');
+    headCount = parseInt(headCount);  // 문자열을 숫자로 변환
+    if (isNaN(headCount)) {
+        alert("인원수는 숫자만 입력할 수 있습니다.");
+        return;  // 숫자가 아닌 경우 폼 제출 중단
+    }
+    formData.set('head-count', headCount);  // 유효한 숫자만 전송
+
+    // 서버로 데이터 전송
+    fetch('/api/postSave', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'  // 쿠키 기반 인증 (HTTP Only)
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.text();  // 응답을 텍스트로 처리
+        }
+        throw new Error('서버 응답이 올바르지 않습니다.');
+    })
+    .then(data => {
+        console.log('성공:', data);
+        alert("포스트가 성공적으로 저장되었습니다");
+        window.location.href = '/';
+    })
+    .catch(error => {
+        console.error('에러 발생:', error);
+        alert("포스트 저장 중 오류가 발생했습니다.");
+    });
+});
+
 </script>
 </body>
 </html>

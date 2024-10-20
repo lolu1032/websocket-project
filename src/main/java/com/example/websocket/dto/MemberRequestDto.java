@@ -22,6 +22,7 @@ public class MemberRequestDto {
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .email(email)
+                .name(name)
                 /**
                  * password 암호화
                  */
