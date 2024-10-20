@@ -1,3 +1,9 @@
+# 2024-10-19
+## 게시글 작성 시 의문점
+만약 데이터베이스에 마크업 언어 내용을 그대로 저장한다면 이미지나 마크업 기능들이 제대로 될지가 의문이다. 그래서 내일은 디비에 저장해보고 꺼내서 확인해 볼 예정이다.
+## 마크업 언어가 정상적으로 적용될 때의 화면 예상 구성
+![Group 12](https://github.com/user-attachments/assets/4bf1514f-c7d7-4c04-9c4b-c39dba1342cc)
+
 # 2024-10-18
 ## 게시글 작성
 ![dlalwl](https://github.com/user-attachments/assets/5c5606f3-b97e-488c-8373-c9d45421d0f8)
