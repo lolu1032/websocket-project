@@ -4,11 +4,25 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<link rel="stylesheet" href="../css/header.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+<script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+<script src="../js/fetchWithAuth.js"></script>
+<script src="../js/main.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <body>
-<h1 th:text="${post.title}">제목</h1>
-<p>작성자: <span th:text="${post.member.name}">작성자</span></p>
-<p>작성일: <span th:text="${post.day}">작성일</span></p>
-<div th:utext="${post.content}">내용</div>
-<a href="/posts">목록으로 돌아가기</a>
+<div th:replace="~{fragments/header :: header}"></div>
+<div>
+    <h1 th:text="${post.title}">제목</h1>
+    <p th:text="${post.category}">카테고리</p>
+    <p th:text="${post.language}">언어</p>
+    <p th:text="${post.position}">포지션</p>
+    <div th:utext="${post.content}"></div>
+    <p th:text="${post.member.name}">작성자</p>
+</div>
 </body>
 </html>

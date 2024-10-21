@@ -35,7 +35,8 @@ public class SecurityConfig {
             "/css/**",
             "/js/**",
             "/posts/**",
-//            "/post/**",
+            "/post/**",
+            "/files/**"
     };
 
     @Bean
