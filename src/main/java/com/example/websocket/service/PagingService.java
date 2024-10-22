@@ -1,6 +1,7 @@
 package com.example.websocket.service;
 
 import com.example.websocket.dao.PostRepository;
+import com.example.websocket.dto.PostDTO;
 import com.example.websocket.entity.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

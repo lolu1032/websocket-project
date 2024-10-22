@@ -1,5 +1,6 @@
 package com.example.websocket.controller;
 
+import com.example.websocket.dto.PostDTO;
 import com.example.websocket.entity.Member;
 import com.example.websocket.entity.Post;
 import com.example.websocket.jwt.JwtTokenProvider;
@@ -32,12 +33,13 @@ public class PostController {
             @RequestParam("head-date") String headDate,
             @RequestParam("head-position") String headPosition,
             @RequestParam("head-language") String headLanguage,
+            @RequestParam("head-endDate") String headEndDate,
             @RequestParam("content") String content) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long id = Long.valueOf(authentication.getName());
         Member member = memberService.findByUsername(id); // ID로 Member 객체 찾기
         // Call the service method
-        Post savedPost = postService.postSave(headPost, headTitle, headCount, headDate, headPosition, headLanguage, content, member);
+        Post savedPost = postService.postSave(headPost, headTitle, headCount, headDate, headPosition, headLanguage, content,headEndDate, member);
 
         // Return a success response
         return ResponseEntity.ok("Post saved successfully with ID: " + savedPost.getId());

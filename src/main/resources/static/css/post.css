@@ -44,7 +44,7 @@
 #count {
     width: 15%;
 }
-#date,#language {
+#date,#language,#endDate {
     padding: 10px;
 }
 select, input {

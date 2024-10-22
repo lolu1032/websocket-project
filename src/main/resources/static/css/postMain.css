@@ -1,0 +1,67 @@
+.post-container {
+    display: flex;
+    width: 50%;
+    margin: 0 auto;
+    flex-direction: column;
+    padding: 30px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    gap: 20px;
+}
+
+.head-top {
+    text-align: center; /* 제목 중앙 정렬 */
+}
+
+.head-top h1 {
+    font-size: 32px; /* 제목 크기 증가 */
+    margin-bottom: 15px; /* 아래 여백 */
+    color: #333; /* 제목 색상 */
+}
+
+.head-mid, .head-foot {
+    display: flex; /* Flexbox 사용 */
+    justify-content: space-between; /* 요소 간격 */
+    margin-bottom: 10px; /* 아래 여백 줄임 */
+    padding: 10px; /* 패딩 추가 */
+    background-color: #ffffff; /* 흰색 배경 */
+    border-radius: 6px; /* 둥근 모서리 */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05); /* 미세한 그림자 효과 */
+}
+
+.category, .day, .endDate, .count, .language, .position {
+    font-size: 24px; /* 폰트 크기 */
+    font-weight: 600;
+    color: #555; /* 텍스트 색상 */
+    flex: 1; /* 같은 비율로 공간을 차지하게 설정 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+.mid-container {
+    width: 50%;
+    margin: 0 auto;
+    padding-top: 50px;
+}
+.content h1 {
+    font-size: 40px; /* H1 크기 조정 */
+    margin: 10px 0; /* 위아래 여백 */
+}
+
+.content p {
+    font-size: 22px; /* P 태그 크기 조정 */
+    line-height: 1.6; /* 줄 높이 조정 */
+    margin: 8px 0; /* 위아래 여백 */
+}
+.foot-container {
+    display: flex; /* Flexbox 사용 */
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    padding: 10px 0; /* 위아래 패딩 추가 (원하는 대로 조정) */
+    width: 50%;
+    margin: 0 auto;
+    padding-top: 50px;
+}
+.name {
+    font-size: 26px;
+    margin-left : auto;
+}

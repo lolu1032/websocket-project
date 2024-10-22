@@ -2,6 +2,7 @@ package com.example.websocket.service;
 
 import com.example.websocket.dao.MemberRepository;
 import com.example.websocket.dao.PostRepository;
+import com.example.websocket.dto.PostDTO;
 import com.example.websocket.entity.Member;
 import com.example.websocket.entity.Post;
 import com.example.websocket.jwt.JwtTokenProvider;
@@ -26,19 +27,21 @@ public class PostService {
     private final Parser parser = Parser.builder().build();
     private final HtmlRenderer renderer = HtmlRenderer.builder().build();
 
-    public Post postSave(String headPost, String headTitle, int headCount, String headDate, String headPosition, String headLanguage, String content,Member member) {
+    public Post postSave(String headPost, String headTitle, int headCount, String headDate, String headPosition, String headLanguage, String content,String endDate,Member member) {
 
         // Post 객체 생성
-        Post post = new Post();
-        post.setCategory(headPost);
-        post.setTitle(headTitle);
-        post.setCount(headCount);
-        post.setDay(LocalDate.parse(headDate));
-        post.setPosition(headPosition);
-        post.setLanguage(headLanguage);
-        post.setContent(content);
-        post.setMember(member);
+        PostDTO postDTO = new PostDTO();
+        postDTO.setCategory(headPost);
+        postDTO.setTitle(headTitle);
+        postDTO.setCount(headCount);
+        postDTO.setDay(LocalDate.parse(headDate));
+        postDTO.setPosition(headPosition);
+        postDTO.setLanguage(headLanguage);
+        postDTO.setContent(content);
+        postDTO.setEndDate(LocalDate.parse(endDate));
+        postDTO.setMember(member);
 
+        Post post = postDTO.toEntity();
         return postRepository.save(post);
     }
 
@@ -52,7 +55,18 @@ public class PostService {
     public Optional<Post> postData(Long id) {
         Optional<Post> optionalPost = postRepository.findById(id);
         Post post = optionalPost.get();
-        post.setContent(convertMarkdownToHtml(post.getContent()));
-        return Optional.of(post);
+        Post updatedPost = Post.builder()
+                .id(post.getId())  // 기존의 ID 값
+                .category(post.getCategory()) // 카테고리 복사
+                .title(post.getTitle())  // 타이틀 복사
+                .count(post.getCount())  // 카운트 복사
+                .day(post.getDay())  // 날짜 복사
+                .position(post.getPosition())  // 포지션 복사
+                .language(post.getLanguage())  // 언어 복사
+                .content(convertMarkdownToHtml(post.getContent()))  // 컨텐츠 변환 후 설정
+                .endDate(post.getEndDate())  // 종료일 복사
+                .member(post.getMember())  // 멤버 복사
+                .build();
+        return Optional.of(updatedPost);
     }
 }

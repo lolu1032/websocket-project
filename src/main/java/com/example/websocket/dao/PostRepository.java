@@ -1,5 +1,6 @@
 package com.example.websocket.dao;
 
+import com.example.websocket.dto.PostDTO;
 import com.example.websocket.entity.Member;
 import com.example.websocket.entity.Post;
 import org.springframework.data.domain.Page;

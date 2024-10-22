@@ -1,5 +1,6 @@
 package com.example.websocket.controller;
 
+import com.example.websocket.dto.PostDTO;
 import com.example.websocket.entity.Post;
 import com.example.websocket.service.PagingService;
 import com.example.websocket.service.PostService;
@@ -46,7 +47,6 @@ public class ViewController {
 
     @GetMapping("/post/{id}")
     public String postMain(@PathVariable String id, Model model) {
-        System.out.println(id);
         Optional<Post> optionalPost = postService.postData(Long.valueOf(id));
         Post post = optionalPost.get();
         model.addAttribute("post",post);

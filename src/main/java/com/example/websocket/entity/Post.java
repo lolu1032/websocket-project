@@ -1,16 +1,12 @@
 package com.example.websocket.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Getter
-@Setter
 @Table(name = "post")
 @Entity
 public class Post {
@@ -25,6 +21,7 @@ public class Post {
     private LocalDate day;
     private String position;
     private String language;
+    private String endDate;
     /**
      * Lob = Large Object 대용량 데이터를 데이터베이스에 저장할 때 사용
      */
@@ -36,4 +33,18 @@ public class Post {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @Builder
+    public Post(Long id,String category, String title, int count, LocalDate day, String position, String language, String content, String endDate, Member member) {
+        this.id = id;
+        this.category = category;
+        this.title = title;
+        this.count = count;
+        this.day = day;
+        this.position = position;
+        this.language = language;
+        this.content = content;
+        this.endDate = endDate;
+        this.member = member;
+    }
 }

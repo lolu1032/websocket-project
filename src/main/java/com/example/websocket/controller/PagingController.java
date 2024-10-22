@@ -1,5 +1,6 @@
 package com.example.websocket.controller;
 
+import com.example.websocket.dto.PostDTO;
 import com.example.websocket.entity.Post;
 import com.example.websocket.service.PagingService;
 import lombok.RequiredArgsConstructor;
