@@ -18,7 +18,7 @@ public class Post {
     private String category;
     private String title;
     private int count;
-    private LocalDate day;
+    private String day;
     private String position;
     private String language;
     private String endDate;
@@ -35,8 +35,7 @@ public class Post {
     private Member member;
 
     @Builder
-    public Post(Long id,String category, String title, int count, LocalDate day, String position, String language, String content, String endDate, Member member) {
-        this.id = id;
+    public Post(String category, String title, int count, String day, String position, String language, String content, String endDate, Member member) {
         this.category = category;
         this.title = title;
         this.count = count;

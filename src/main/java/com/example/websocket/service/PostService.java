@@ -34,11 +34,11 @@ public class PostService {
         postDTO.setCategory(headPost);
         postDTO.setTitle(headTitle);
         postDTO.setCount(headCount);
-        postDTO.setDay(LocalDate.parse(headDate));
+        postDTO.setDay(headDate);
         postDTO.setPosition(headPosition);
         postDTO.setLanguage(headLanguage);
         postDTO.setContent(content);
-        postDTO.setEndDate(LocalDate.parse(endDate));
+        postDTO.setEndDate(endDate);
         postDTO.setMember(member);
 
         Post post = postDTO.toEntity();
@@ -56,7 +56,6 @@ public class PostService {
         Optional<Post> optionalPost = postRepository.findById(id);
         Post post = optionalPost.get();
         Post updatedPost = Post.builder()
-                .id(post.getId())  // 기존의 ID 값
                 .category(post.getCategory()) // 카테고리 복사
                 .title(post.getTitle())  // 타이틀 복사
                 .count(post.getCount())  // 카운트 복사

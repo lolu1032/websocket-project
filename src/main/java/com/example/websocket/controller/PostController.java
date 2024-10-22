@@ -40,6 +40,7 @@ public class PostController {
         Member member = memberService.findByUsername(id); // ID로 Member 객체 찾기
         // Call the service method
         Post savedPost = postService.postSave(headPost, headTitle, headCount, headDate, headPosition, headLanguage, content,headEndDate, member);
+        log.info("save={}",content);
 
         // Return a success response
         return ResponseEntity.ok("Post saved successfully with ID: " + savedPost.getId());

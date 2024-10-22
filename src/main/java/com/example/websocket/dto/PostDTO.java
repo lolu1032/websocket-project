@@ -19,11 +19,11 @@ public class PostDTO {
     private String category;
     private String title;
     private int count;
-    private LocalDate day;
+    private String day;
     private String position;
     private String language;
     private String content;
-    private LocalDate endDate;
+    private String endDate;
     private Member member;
 
     public Post toEntity() {

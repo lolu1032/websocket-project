@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Post Form</title>
     <link rel="stylesheet" href="../css/post.css">
     <link rel="stylesheet" href="../css/header.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,7 +26,7 @@
                     <option value="스터디">스터디</option>
                     <option value="프로젝트">프로젝트</option>
                 </select>
-                <input class="header-type" type="text" name="head-title">
+                <input class="header-type" type="text" name="head-title" placeholder="제목을 입력하세요">
             </div>
             <div class="head-mid">
                 <label for="count" id="count">인원수</label>
@@ -54,27 +54,29 @@
     <div class="modal-content">
         <span class="close-btn">&times;</span>
         <h3>언어 선택</h3>
+        <!-- 언어 선택 UI -->
         <label class="values">프론트엔드</label>
         <div class="front-content">
-            <input type="checkbox" name="lang" value="React">React
+            <input type="checkbox" name="lang" value="React"> React
             <input type="checkbox" name="lang" value="Vue"> Vue.js
             <input type="checkbox" name="lang" value="Svelte"> Svelte
             <input type="checkbox" name="lang" value="Angular"> Angular
         </div>
         <label class="values">백엔드</label>
         <div class="back-content">
-            <input type="checkbox" name="lang" value="Java">Java
+            <input type="checkbox" name="lang" value="Java"> Java
             <input type="checkbox" name="lang" value="Node"> Node.js
             <input type="checkbox" name="lang" value="Ruby"> Ruby
             <input type="checkbox" name="lang" value="Go"> Go
             <input type="checkbox" name="lang" value="Python"> Python
             <input type="checkbox" name="lang" value="Kotlin"> Kotlin
         </div>
+        <!-- 기타 언어 -->
         <label class="values">기타</label>
         <div class="etc-content">
-            <input type="checkbox" name="lang" value="Figma">Figma
-            <input type="checkbox" name="lang" value="Photoshop">Photoshop
-            <input type="checkbox" name="lang" value="Illustrator">Illustrator
+            <input type="checkbox" name="lang" value="Figma"> Figma
+            <input type="checkbox" name="lang" value="Photoshop"> Photoshop
+            <input type="checkbox" name="lang" value="Illustrator"> Illustrator
         </div>
         <div class="btn">
             <button class="save-btn">저장</button>
@@ -90,22 +92,13 @@
         height: '600px',
         initialEditType: 'markdown',
         previewStyle: 'vertical',
-        initialValue: '내용을 입력해주세요',
-        events: {
-            change: function () {
-                console.log(editor.getMarkdown());
-            }
-        },
         hooks: {
-        // blob 업로드할 이미지 파일, callback : 업로드 후 호출 함수
             addImageBlobHook: (blob, callback) => {
-            // 업로드한 파일을 서버로 전송하기 위해 FormData 객체 생성 이미지를 추가
                 const formData = new FormData();
                 formData.append('file', blob);
 
                 $.ajax({
                     type: 'POST',
-                    // 파일 업로드를 포함한 데이터 전송에 사용됩니다.
                     enctype: 'multipart/form-data',
                     url: '/files/upload',
                     data: formData,
@@ -115,16 +108,12 @@
                     cache: false,
                     timeout: 600000,
                     success: function(data) {
-                        const url = '/files/uploads/' + encodeURIComponent(data.fileName); // URL 인코딩 추가
-                        callback(url, '사진 대체 텍스트 입력');
-
-                        // 이미지 표시
-                        // displayUploadedImage(url) 함수를 호출하여 웹 페이지에 업로드된 이미지를 표시합니다.
-                        displayUploadedImage(url); // 업로드된 이미지를 표시하는 함수 호출
+                        const url = '/files/uploads/' + encodeURIComponent(data.fileName);
+                        callback(url);
+                        displayUploadedImage(url);
                     },
                     error: function(e) {
-                        // 기본 이미지 URL로 변경
-                        const errorImageUrl = '/path/to/default/image.png'; // 기본 이미지 URL
+                        const errorImageUrl = '/path/to/default/image.png';
                         callback(errorImageUrl, '사진 대체 텍스트 입력');
                     }
                 });
@@ -132,79 +121,66 @@
         }
     });
 
-    // 언어 입력 필드를 클릭하면 모달을 표시
     const languageInput = document.getElementById('languageInput');
     const modal = document.getElementById('languageModal');
     const closeBtn = document.querySelector('.close-btn');
-    const saveBtn = document.querySelector('.save-btn'); // 저장 버튼 선택
-    const checkboxes = document.querySelectorAll('input[name="lang"]'); // 언어 체크박스
+    const saveBtn = document.querySelector('.save-btn');
+    const checkboxes = document.querySelectorAll('input[name="lang"]');
 
     languageInput.addEventListener('click', () => {
-        modal.style.display = 'block'; // 모달 표시
+        modal.style.display = 'block';
     });
 
-    // 모달 닫기 버튼 클릭 시 모달 숨기기
     closeBtn.addEventListener('click', () => {
         modal.style.display = 'none';
     });
 
-    // 모달 외부 클릭 시 모달 숨기기
     window.addEventListener('click', (event) => {
         if (event.target === modal) {
             modal.style.display = 'none';
         }
     });
 
-    // 저장 버튼 클릭 시 선택된 언어를 입력 필드에 표시
-    saveBtn.addEventListener('click', () => {
-        const selectedLanguages = Array.from(checkboxes) // 체크박스를 배열로 변환
-            .filter(checkbox => checkbox.checked) // 체크된 박스 필터링
-            .map(checkbox => checkbox.value); // 값 추출
+    saveBtn.addEventListener('click', (event) => {
+        event.preventDefault();
 
-        // 선택된 언어를 입력 필드에 표시
-        languageInput.value = selectedLanguages.join(', '); // 언어를 ','로 구분하여 입력 필드에 표시
-        modal.style.display = 'none'; // 모달 숨기기
+        const selectedLanguages = Array.from(checkboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+
+        if (selectedLanguages.length > 0) {
+            languageInput.value = selectedLanguages.join(', ');
+        } else {
+            languageInput.value = '';
+        }
+
+        modal.style.display = 'none';
     });
-
-    // 업로드된 이미지를 표시하는 함수
-    function displayUploadedImage(url) {
-        const uploadedImagesContainer = document.getElementById('uploadedImages');
-        const imgElement = document.createElement('img');
-        imgElement.src = url; // 업로드된 이미지 URL
-        imgElement.alt = 'Uploaded Image';
-        imgElement.style.width = '100px'; // 이미지 크기 조절
-        imgElement.style.height = '100px'; // 이미지 크기 조절
-        imgElement.style.margin = '5px'; // 여백 조절
-        uploadedImagesContainer.appendChild(imgElement); // 이미지 추가
-    }
 
 document.getElementById('postForm').addEventListener('submit', function(event) {
     event.preventDefault();  // 폼 제출 시 페이지 새로고침 방지
 
-    const formData = new FormData(this); // 폼 데이터 수집
+    const formData = new FormData(this);
+    let markdownContent = editor.getMarkdown();
 
-    // TOAST UI 에디터에서 마크다운 내용 가져와서 'content' 필드에 추가
-    const markdownContent = editor.getMarkdown();
-    formData.append('content', markdownContent);
+    formData.set('content', markdownContent);
 
-    // head-count 값이 숫자가 아니면 기본값을 설정하거나 오류 처리
     let headCount = formData.get('head-count');
-    headCount = parseInt(headCount);  // 문자열을 숫자로 변환
+    headCount = parseInt(headCount);
     if (isNaN(headCount)) {
         alert("인원수는 숫자만 입력할 수 있습니다.");
-        return;  // 숫자가 아닌 경우 폼 제출 중단
+        return;
     }
-    formData.set('head-count', headCount);  // 유효한 숫자만 전송
+    formData.set('head-count', headCount);
 
-    // 서버로 데이터 전송
     fetch('/api/postSave', {
         method: 'POST',
         body: formData,
-        credentials: 'include'  // 쿠키 기반 인증 (HTTP Only)
+        credentials: 'include'
     })
     .then(response => {
         if (response.ok) {
-            return response.text();  // 응답을 텍스트로 처리
+            return response.text();
         }
         throw new Error('서버 응답이 올바르지 않습니다.');
     })
