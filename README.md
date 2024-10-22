@@ -1,6 +1,7 @@
 # 2024-10-21
 ## 게시글 페이지 마크업 언어 적용해서 올리기
-![게시글](https://github.com/user-attachments/assets/3daa64b8-e33a-44dd-b262-1b3432d0c428)
+![게시글 페이지](https://github.com/user-attachments/assets/86cef1b6-d941-48fb-adb5-d18006407385)
+
 현재 디비에 저장된 각 게시글의 데이터를 추출하여 뽑아내는거 성공 <br>
 마크업 언어로 저장된 데이터 또한 commonmark의존성을 추가 후 Parser 객체를 사용하여 마크업 언어로 저장된 데이터를 html로 변환 후 적용 잘되는지 확인 완료
 ## 이번주 목표
