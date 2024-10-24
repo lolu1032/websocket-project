@@ -36,7 +36,7 @@
     <div class="content" th:utext="${post.content}"></div>
 </div>
 <div class="foot-container">
-    <div class="name" th:text="${post.member.name}">작성자</div>
+    <div class="name" th:text="|작성자 : ${post.member.name}">작성자</div>
 </div>
 </body>
 </html>

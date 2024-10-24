@@ -49,4 +49,7 @@ public class PagingService {
         paging.put("hasPreviousPageBlock",hasPreviousPageBlock);
         return paging;
     }
+    public Page<Post> findByCategory(String category, Pageable pageable) {
+        return postRepository.findByCategory(category, pageable);
+    }
 }

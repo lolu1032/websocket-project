@@ -1,5 +1,6 @@
 package com.example.websocket.controller;
 
+import com.example.websocket.dao.PostRepository;
 import com.example.websocket.dto.PostDTO;
 import com.example.websocket.entity.Member;
 import com.example.websocket.entity.Post;
@@ -16,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -25,6 +27,7 @@ import java.util.Optional;
 public class PostController {
     private final PostService postService;
     private final MemberService memberService;
+    private final PostRepository postRepository;
     @PostMapping("/postSave")
     public ResponseEntity<String> postSave(
             @RequestParam("head-post") String headPost,

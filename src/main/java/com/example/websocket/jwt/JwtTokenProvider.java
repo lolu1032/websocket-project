@@ -56,8 +56,10 @@ public class JwtTokenProvider {
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         // AccessToken 생성
         String accessToken = Jwts.builder()
-                // sub은 JWT에서 미리 정의된 표준 클레임 이름중 하나.
-                // name은 authentication.getName()값
+                /**
+                 * sub은 JWT에서 미리 정의된 표준 클레임 이름중 하나.
+                 * name은 authentication.getName()값
+                 */
                 .setSubject(authentication.getName()) // payload : "sub" : "name"
                 .claim(AUTHORITIES_KEY,authorities) // payload : "auth" : "ROLE_USER"
                 .setExpiration(accessTokenExpiresIn) // payload : "exp" : 111100 만료시간

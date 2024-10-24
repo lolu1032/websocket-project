@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 delay: 1,
                 disableOnInteraction: false,
             },
-            speed: 8000, // 8e3 대신 8000으로 명시적으로 변경
+            speed: 8000,
             loop: true,
             slidesPerView: "auto",
             freemode: true
