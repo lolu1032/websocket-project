@@ -1,3 +1,10 @@
+# 2024-10-22
+## 게시글 작성 시 ,이 붙는 현상 발견
+![123](https://github.com/user-attachments/assets/c9011b7c-78c4-40ab-8baf-80a47a25b230)
+log를 찍어서 확인해 보니 클라에서 보내는 값에 ,123으로 오는걸 확인
+## 문제해결
+문제 원인은 formData.append에서 나온 것이다. append는 배열로 저장하는데 마크업 언어 처음이 공백으로 저장되면서 123이 두번째로 저장 그래서 ' ',1234 이렇게 들어가기 시작 그래서 ,1234가 나온거다 <br>
+해결 방법은 formData.append 에서 formData.set으로 교체하여 고쳤다.
 # 2024-10-21
 ## 게시글 페이지 마크업 언어 적용해서 올리기
 ![게시글 페이지](https://github.com/user-attachments/assets/86cef1b6-d941-48fb-adb5-d18006407385)
