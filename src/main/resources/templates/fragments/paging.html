@@ -1,8 +1,8 @@
+<!-- fragments/paging.html -->
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
 </head>
 <body>
 <div th:fragment="paging">
@@ -10,19 +10,22 @@
         <ul class="pagination justify-content-center">
             <!-- 이전 버튼 -->
             <li class="page-item" th:classappend="${postPage.hasPrevious()} ? '' : 'disabled'">
-                <a class="page-link" th:href="@{/posts(page=${postPage.number - 1})}" tabindex="-1">이전</a>
+                <a class="page-link" th:href="@{/posts(page=${postPage.number - 1}, category=${selectedCategory})}"
+                   data-page="${postPage.number - 1}" tabindex="-1">이전</a>
             </li>
 
             <!-- 페이지 번호 버튼들 -->
             <th:block th:each="pageNumber : ${pageNumbers}">
                 <li class="page-item" th:classappend="${pageNumber - 1 == postPage.number} ? 'active' : ''">
-                    <a class="page-link" th:href="@{/posts(page=${pageNumber - 1})}" th:text="${pageNumber}"></a>
+                    <a class="page-link" th:href="@{/posts(page=${pageNumber - 1}, category=${selectedCategory})}"
+                       data-page="${pageNumber - 1}" th:text="${pageNumber}"></a>
                 </li>
             </th:block>
 
             <!-- 다음 버튼 -->
             <li class="page-item" th:classappend="${postPage.hasNext()} ? '' : 'disabled'">
-                <a class="page-link" th:href="@{/posts(page=${postPage.number + 1})}">다음</a>
+                <a class="page-link" th:href="@{/posts(page=${postPage.number + 1}, category=${selectedCategory})}"
+                   data-page="${postPage.number + 1}">다음</a>
             </li>
         </ul>
     </nav>

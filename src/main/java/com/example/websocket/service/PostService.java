@@ -7,6 +7,8 @@ import com.example.websocket.entity.Member;
 import com.example.websocket.entity.Post;
 import com.example.websocket.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
@@ -68,5 +70,12 @@ public class PostService {
                 .member(post.getMember())  // 멤버 복사
                 .build();
         return Optional.of(updatedPost);
+    }
+    public  Page<Post> findPostsByCategory(String category,Pageable pageable) {
+        return postRepository.findByCategory(category,pageable);
+    }
+
+    public Page<Post> findAllPosts(Pageable pageable) {
+        return postRepository.findAll(pageable);
     }
 }

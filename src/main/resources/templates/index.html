@@ -41,34 +41,34 @@
     <div class="recruitment-sel">
         <select class="sel-options" name="sel-op" id="sel-op">
             <option value="all">전체</option>
-            <option value="study">스터디</option>
-            <option value="project ">프로젝트</option>
+            <option value="스터디">스터디</option>
+            <option value="프로젝트">프로젝트</option>
         </select>
     </div>
     <div class="post">
-        <div  th:each="post : ${postPage}">
-            <a class="post-container" th:href="@{/post/{id}(id=${post.id})}">
-                <div class="side-title">
-                    <p class="side_title" th:text="${post.category}">카데고리</p>
-                </div>
-                <div class="post-title">
-                    <h3 class="title" th:text="${post.title}">무엇무엇을 무엇을 구합니다</h3>
-                </div>
-                <div class="post-language">
-                    <p class="language" th:text="|언어 : ${post.language}">언어1 언어2 언어3</p>
-                </div>
-                <div class="post-position">
-                    <p class="position" th:text="|포지션 : ${post.position}">프론트, 백엔드</p>
-                </div>
-                <div class="post-people">
-                    <p class="people" th:text="|인원수 : ${post.count}|"></p>
-                </div>
-                <div class="post-a">
-                    <p class="language" th:text="${post.member.name}">김창수(xxxx***)</p>
-                </div>
-            </a>
-        </div>
+    <div th:each="post : ${postPage}">
+        <a class="post-container" th:href="@{/post/{id}(id=${post.id})}">
+            <div class="side-title">
+                <p class="side_title" th:text="${post.category}">카테고리</p>
+            </div>
+            <div class="post-title">
+                <h3 class="title" th:text="${post.title}">무엇무엇을 무엇을 구합니다</h3>
+            </div>
+            <div class="post-language">
+                <p class="language" th:text="|언어 : ${post.language}">언어1 언어2 언어3</p>
+            </div>
+            <div class="post-position">
+                <p class="position" th:text="|포지션 : ${post.position}">프론트, 백엔드</p>
+            </div>
+            <div class="post-people">
+                <p class="people" th:text="|인원수 : ${post.count}|"></p>
+            </div>
+            <div class="post-a">
+                <p class="language" th:text="${post.member.name}">김창수(xxxx***)</p>
+            </div>
+        </a>
     </div>
+</div>
     <div th:replace="~{fragments/paging :: paging}"></div>
 </div>
 </body>
