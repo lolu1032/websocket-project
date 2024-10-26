@@ -27,16 +27,17 @@ public class ViewController {
     private final PostService postService;
     @GetMapping(value = {"/","/posts"})
     public String main(@RequestParam(value = "page", defaultValue = "0") int page,
-                       @RequestParam(value = "category", defaultValue = "all")
-                       String category,Model model) {
+                       @RequestParam(value = "category", defaultValue = "all") String category,
+                       Model model) {
         Pageable pageable = PageRequest.of(page, 15);
         Page<Post> postPage;
-
+        log.info("category={}",category);
         if (category.equals("all")) {
             postPage = postService.findAllPosts(pageable);  // 전체 게시글 가져오기
         } else {
             postPage = postService.findPostsByCategory(category, pageable);  // 선택된 카테고리의 게시글만 가져오기
         }
+        log.info("postPage={}",postPage);
 
         model.addAttribute("postPage", postPage);
         model.addAttribute("selectedCategory", category);
@@ -67,21 +68,4 @@ public class ViewController {
         model.addAttribute("post",post);
         return "post/main";
     }
-    @PostMapping("/posts")
-    public String getPostsByCategory(@RequestParam String category, @RequestParam int page, Model model) {
-        Page<Post> postPage;
-        if ("all".equals(category)) {
-            postPage = postService.findAllPosts(PageRequest.of(page, 15));
-        } else {
-            postPage = postService.findPostsByCategory(category, PageRequest.of(page, 15));
-        }
-
-        model.addAttribute("postPage", postPage);
-        model.addAttribute("selectedCategory", category);
-        model.addAttribute("pageNumbers", IntStream.rangeClosed(1, postPage.getTotalPages()).boxed().collect(Collectors.toList()));
-
-        // 게시글 목록과 페이징을 포함하는 부분의 HTML을 반환
-        return "fragments/posts :: postList, fragments/paging :: paging"; // Thymeleaf fragment의 이름을 반환
-    }
-
 }

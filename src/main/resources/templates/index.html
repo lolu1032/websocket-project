@@ -22,9 +22,9 @@
         <!-- Additional required wrapper -->
         <div class="swiper-wrapper">
             <!-- Slides -->
-            <div class="swiper-slide"><img class="slide-page" src="../img/Group 9.png"  alt=""></div>
-            <div class="swiper-slide"><img class="slide-page" src="../img/Group 5 (2).png" alt=""></div>
-            <div class="swiper-slide"><img class="slide-page" src="../img/Group 5 (1).png"></div>
+            <div class="swiper-slide"><img class="slide-page" src="../img/Grou 9.png"  alt=""></div>
+            <div class="swiper-slide"><img class="slide-page" src="../img/Grop 5 (2).png" alt=""></div>
+            <div class="swiper-slide"><img class="slide-page" src="../img/Grup 5 (1).png"></div>
         </div>
         <!-- If we need pagination -->
         <div class="swiper-pagination"></div>
@@ -37,13 +37,11 @@
 <div>
     <div class="recruitment-post">
         <h2>모집글</h2>
-    </div>
-    <div class="recruitment-sel">
-        <select class="sel-options" name="sel-op" id="sel-op">
-            <option value="all">전체</option>
-            <option value="스터디">스터디</option>
-            <option value="프로젝트">프로젝트</option>
-        </select>
+        <ul class="list">
+            <li class="all"><a href="http://localhost:8080/posts?page=0&category=all">전체보기</a></li>
+            <li class="study"><a href="http://localhost:8080/posts?page=0&category=스터디">스터디</a></li>
+            <li class="project"><a href="http://localhost:8080/posts?page=0&category=프로젝트">프로젝트</a></li>
+        </ul>
     </div>
     <div class="post">
     <div th:each="post : ${postPage}">
