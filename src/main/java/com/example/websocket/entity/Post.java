@@ -26,6 +26,7 @@ public class Post {
      * Lob = Large Object 대용량 데이터를 데이터베이스에 저장할 때 사용
      */
     @Lob
+    @Column(length = 1000)
     private String content;
     /**
      *    @ManyToOne(fetch = FetchType.LAZY) 다대일 관계를 나타낸다. 지연로딩은 사용자가 직접 데이터에 접근할 때 데이터베이스에서 정보를 빼온다
