@@ -1,3 +1,9 @@
+# 2024-10-28
+## Specification
+![검색](https://github.com/user-attachments/assets/11e2f82f-51c5-4b4c-825f-58e3b944f8ca)
+처음에는 동적쿼리로 마이바티스로 if test=""를 써서 해결할까 생각을 했다. 그러다 구글링을 하면서 JPA로 할 수 있는 방법을 찾았는데 그때 찾은게 Specification이였다. <br>
+Specification은 간단히 말해서 동적으로 쿼리를 만들 수 있도록 지원해주는 JPA의 기능이다. 내가 마이바티스로 할려던걸 JPA로 할 수 있는거였다. 아직은 테스트용 전체만 만들었고 내일은 페이징처리까지 붙여서 만들 예정이다
+
 # 2024-10-22
 ## 게시글 작성 시 ,이 붙는 현상 발견
 ![123](https://github.com/user-attachments/assets/c9011b7c-78c4-40ab-8baf-80a47a25b230)
