@@ -1,5 +1,7 @@
 package com.example.websocket.controller;
 
+import com.example.websocket.SearchSpecification;
+import com.example.websocket.dao.PostRepository;
 import com.example.websocket.dto.PostDTO;
 import com.example.websocket.entity.Post;
 import com.example.websocket.service.PagingService;
@@ -9,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +28,7 @@ import java.util.stream.IntStream;
 public class ViewController {
     private final PagingService pagingService;
     private final PostService postService;
+    private final PostRepository postRepository;
     @GetMapping(value = {"/","/posts"})
     public String main(@RequestParam(value = "page", defaultValue = "0") int page,
                        @RequestParam(value = "category", defaultValue = "all") String category,
@@ -67,5 +71,23 @@ public class ViewController {
         Post post = optionalPost.get();
         model.addAttribute("post",post);
         return "post/main";
+    }
+    @GetMapping("/search")
+    public String search(@RequestParam String searchList, @RequestParam String search,Model model) {
+        Specification<Post> specification = Specification.where(null);
+        if ("all".equals(searchList)) {
+            specification = specification.and(SearchSpecification.allSearch(search));
+        } else if ("title".equals(searchList)) {
+            specification = specification.and(SearchSpecification.titleSearch(search));
+        } else if ("language".equals(searchList)) {
+            specification = specification.and(SearchSpecification.languageSearch(search));
+        }
+        List<Post> list = postRepository.findAll(specification);
+        log.info("list={}",list);
+        model.addAttribute("list",list);
+        if (list.isEmpty()) {
+            model.addAttribute("message", "검색 결과가 없습니다.");
+        }
+        return "searchPage";
     }
 }
