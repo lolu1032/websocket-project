@@ -13,4 +13,14 @@ public class SearchSpecification {
                 )
         );
     }
+    public static Specification<Post> titleSearch(String keyword) {
+        return ((root, query, criteriaBuilder) ->
+                criteriaBuilder.like(root.get(Post_.title),"%"+keyword+"%")
+        );
+    }
+    public static Specification<Post> langSearch(String keyword) {
+        return ((root, query, criteriaBuilder) ->
+                criteriaBuilder.like(root.get(Post_.language),"%"+keyword+"%")
+        );
+    }
 }

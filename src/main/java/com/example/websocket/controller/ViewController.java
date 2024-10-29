@@ -77,6 +77,10 @@ public class ViewController {
         Specification<Post> specification = Specification.where(null);
         if ("all".equals(searchList)) {
             specification = specification.and(SearchSpecification.allSearch(search));
+        }else if("title".equals(searchList)) {
+            specification = specification.and(SearchSpecification.titleSearch(search));
+        }else {
+            specification = specification.and(SearchSpecification.langSearch(search));
         }
         List<Post> list = postRepository.findAll(specification);
         log.info("list={}",list);
