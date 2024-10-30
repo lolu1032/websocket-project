@@ -62,7 +62,7 @@
         </ul>
     </div>
     <div class="post">
-        <div th:each="list : ${list}">
+        <div th:each="list : ${postPage}">
             <a class="post-container" th:href="@{/post/{id}(id=${list.id})}">
                 <div class="side-title">
                     <p class="side_title" th:text="${list.category}">카테고리</p>
@@ -85,7 +85,7 @@
             </a>
         </div>
     </div>
-<!--    <div th:replace="~{fragments/paging :: paging}"></div>-->
+    <div th:replace="~{fragments/searchPaging :: searchPaging(searchList=${searchList}, search=${search}, postPage=${postPage})}"></div>
 </div>
 </body>
 </html>

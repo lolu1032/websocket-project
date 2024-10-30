@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="searchPaging(searchList, search, postPage)">
+    <nav aria-label="Page navigation" class="paging">
+        <ul class="pagination justify-content-center">
+            <!-- 이전 버튼 -->
+            <li class="page-item" th:classappend="${postPage.hasPrevious()} ? '' : 'disabled'">
+                <a class="page-link"
+                   th:href="@{/search(page=${postPage.number - 1}, searchList=${searchList}, search=${search})}"
+                   tabindex="-1">이전</a>
+            </li>
+
+            <!-- 페이지 번호 버튼들 -->
+            <th:block th:each="pageNumber : ${#numbers.sequence(1, postPage.totalPages)}">
+                <li class="page-item" th:classappend="${pageNumber - 1 == postPage.number} ? 'active' : ''">
+                    <a class="page-link"
+                       th:href="@{/search(page=${pageNumber - 1}, searchList=${searchList}, search=${search})}"
+                       th:text="${pageNumber}"></a>
+                </li>
+            </th:block>
+
+            <!-- 다음 버튼 -->
+            <li class="page-item" th:classappend="${postPage.hasNext()} ? '' : 'disabled'">
+                <a class="page-link"
+                   th:href="@{/search(page=${postPage.number + 1}, searchList=${searchList}, search=${search})}">다음</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>

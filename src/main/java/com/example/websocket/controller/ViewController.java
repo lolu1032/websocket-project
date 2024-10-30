@@ -73,21 +73,29 @@ public class ViewController {
         return "post/main";
     }
     @GetMapping("/search")
-    public String search(@RequestParam String searchList, @RequestParam String search,Model model) {
+    public String search(
+            @RequestParam String searchList,
+            @RequestParam String search,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            Model model) {
+
+        Pageable pageable = PageRequest.of(page, 15);
         Specification<Post> specification = Specification.where(null);
+
         if ("all".equals(searchList)) {
             specification = specification.and(SearchSpecification.allSearch(search));
-        }else if("title".equals(searchList)) {
+        } else if ("title".equals(searchList)) {
             specification = specification.and(SearchSpecification.titleSearch(search));
-        }else {
+        } else {
             specification = specification.and(SearchSpecification.langSearch(search));
         }
-        List<Post> list = postRepository.findAll(specification);
-        log.info("list={}",list);
-        model.addAttribute("list",list);
-        if (list.isEmpty()) {
-            model.addAttribute("message", "검색 결과가 없습니다.");
-        }
+
+        Page<Post> postPage = postRepository.findAll(specification, pageable);
+        model.addAttribute("postPage", postPage);
+        model.addAttribute("searchList", searchList);
+        model.addAttribute("search", search);
+
         return "searchPage";
     }
+
 }
