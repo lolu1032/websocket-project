@@ -1,3 +1,5 @@
+# 2024-11-01
+이번주 일요일에 네트워크 관리사 2급 필기 시험이 있어 시험 공부로 인한 임시 중단..
 # 2024-10-28
 ## Specification
 ![검색](https://github.com/user-attachments/assets/11e2f82f-51c5-4b4c-825f-58e3b944f8ca)
