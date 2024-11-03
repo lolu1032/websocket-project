@@ -41,6 +41,7 @@ public class PostController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long id = Long.valueOf(authentication.getName());
         Member member = memberService.findByUsername(id); // ID로 Member 객체 찾기
+        log.info("member={}",member);
         // Call the service method
         Post savedPost = postService.postSave(headPost, headTitle, headCount, headDate, headPosition, headLanguage, content,headEndDate, member);
         log.info("save={}",content);

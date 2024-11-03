@@ -42,7 +42,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private String getTokenFromCookies(Cookie[] cookies) {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("accessToken")) {
+                if (cookie.getName().equals("refreshToken")) {
                     return cookie.getValue();
                 }
             }

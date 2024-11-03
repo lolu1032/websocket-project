@@ -81,7 +81,7 @@ public class AuthService {
 
         refreshTokenRepository.save(refreshToken);
 
-        createCookie(response,tokenDto.getAccessToken());
+        createCookie(response,tokenDto.getRefreshToken());
 
         log.info("tokenDto={}",tokenDto);
         // 5. 토큰 발급
@@ -120,7 +120,7 @@ public class AuthService {
     @Transactional
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         // 1. 쿠키에서 AccessToken 삭제
-        Cookie cookie = new Cookie("accessToken", null);
+        Cookie cookie = new Cookie("refreshToken", null);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
@@ -145,11 +145,11 @@ public class AuthService {
     }
 
     private void createCookie(HttpServletResponse response, String token) {
-        Cookie cookie = new Cookie("accessToken",token);
+        Cookie cookie = new Cookie("refreshToken",token);
         cookie.setHttpOnly(true);  // JavaScript에서 접근 불가능하도록 설정
         cookie.setSecure(true);    // HTTPS에서만 전송 (HTTPS 환경에서 권장)
         cookie.setPath("/");       // 쿠키의 경로 설정
-        cookie.setMaxAge(1000*60*30); // 쿠키 유효 기간 (예: 1시간)
+        cookie.setMaxAge(60 * 60 * 24 * 7); // 쿠키 유효 기간 (예: 1시간)
         response.addCookie(cookie); // 쿠키를 응답에 추가
     }
     private ResponseEntity<Map<String,Object>> validation(MemberRequestDto memberRequestDto) {
@@ -175,7 +175,7 @@ public class AuthService {
     private String getJwtFromCookies(HttpServletRequest request) {
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
-                if ("accessToken".equals(cookie.getName())) {
+                if ("refreshToken".equals(cookie.getName())) {
                     return cookie.getValue();  // accessToken 값 반환
                 }
             }

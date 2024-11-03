@@ -69,6 +69,8 @@ public class JwtTokenProvider {
         // RefreshToken 생성
         // 유효 기간이 만료된 토큰을 새로운 토큰으로 발급
         String refreshToken = Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim(AUTHORITIES_KEY, authorities) // 권한 정보 추가
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
@@ -76,7 +78,7 @@ public class JwtTokenProvider {
         /**
          * opsForValue()는 문자열 값을 다루기 위한 연산을 수행하는 ValueOperations 객체를 반환한다. 키-값 쌍으로 데이터를 저장 조회 가능
          */
-        redisTemplate.opsForValue().set(authentication.getName(), refreshToken, REFRESH_TOKEN_EXPIRE_TIME, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(authentication.getName(), accessToken, ACCESS_TOKEN_EXPIRE_TIME, TimeUnit.MILLISECONDS);
 
         return JwtToken.builder()
                 .grentType(BEARER_TYPE)
@@ -142,5 +144,4 @@ public class JwtTokenProvider {
         Claims claims = parseClaims(token);
         return claims.getSubject(); // 사용자 ID가 'sub' 필드에 저장된 경우
     }
-
 }
