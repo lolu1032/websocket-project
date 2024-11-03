@@ -1,3 +1,9 @@
+
+// API 호출 전에 Access Token이 만료되었는지 확인
+function isTokenExpired(token) {
+    const decoded = jwt_decode(token);
+    return decoded.exp * 1000 < Date.now();
+}
 async function fetchWithAuth(url, options = {}) {
     try {
         const response = await fetch(url, {

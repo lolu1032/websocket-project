@@ -78,7 +78,7 @@ public class JwtTokenProvider {
         /**
          * opsForValue()는 문자열 값을 다루기 위한 연산을 수행하는 ValueOperations 객체를 반환한다. 키-값 쌍으로 데이터를 저장 조회 가능
          */
-        redisTemplate.opsForValue().set(authentication.getName(), accessToken, ACCESS_TOKEN_EXPIRE_TIME, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(authentication.getName(), accessToken, ACCESS_TOKEN_EXPIRE_TIME, TimeUnit.MINUTES);
 
         return JwtToken.builder()
                 .grentType(BEARER_TYPE)

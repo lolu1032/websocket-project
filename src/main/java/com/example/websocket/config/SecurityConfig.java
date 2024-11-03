@@ -64,6 +64,9 @@ public class SecurityConfig {
                 .formLogin((login) -> login
                         .loginPage("/login")
                         .permitAll())
+                /**
+                 * 로그인 성공하고 받은 토큰이 jwt인증을 먼저 하도록 쓴 것
+                 */
                 .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
