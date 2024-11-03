@@ -1,3 +1,7 @@
+# 2024-11-03
+redis에 accessToken을 보관하고 httponly쿠키에 refreshToken을 보관하는 식으로 바꿨다. 커뮤니티를 통해 accessToken 하나로만 관리하는 방식을 들었다. 내일은 현재의 JWT파일들을 다 없애고 새롭게 만들어 볼 예정이다.
+## 내일 수정할 파일
+JwtFilter, JwtTokenProvider,JwtSecurityConfig 싹다 바꿀 예정
 # 2024-11-01
 이번주 일요일에 네트워크 관리사 2급 필기 시험이 있어 시험 공부로 인한 임시 중단..
 # 2024-10-28
