@@ -1,13 +1,12 @@
 package com.example.websocket.service;
 
 import com.example.websocket.dao.MemberRepository;
-import com.example.websocket.dao.RefreshTokenRepository;
+//import com.example.websocket.dao.RefreshTokenRepository;
 import com.example.websocket.dto.JwtToken;
 import com.example.websocket.dto.MemberRequestDto;
 import com.example.websocket.dto.MemberResponseDto;
 import com.example.websocket.dto.TokenRequestDto;
 import com.example.websocket.entity.Member;
-import com.example.websocket.entity.RefreshToken;
 import com.example.websocket.jwt.JwtTokenProvider;
 
 import jakarta.servlet.http.Cookie;
@@ -37,7 +36,7 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final RefreshTokenRepository refreshTokenRepository;
+//    private final RefreshTokenRepository refreshTokenRepository;
     private final StringRedisTemplate redisTemplate;
 
     /**
@@ -76,58 +75,36 @@ public class AuthService {
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         JwtToken tokenDto = jwtTokenProvider.generateToken(authentication);
 
-        // 4. RefreshToken 저장
-        RefreshToken refreshToken = RefreshToken.builder()
-                .key(authentication.getName())
-                .value(tokenDto.getRefreshToken())
-                .build();
-
-        refreshTokenRepository.save(refreshToken);
-
-        createCookie(response,tokenDto.getRefreshToken());
+        createCookie(response,tokenDto.getAccessToken());
 
         log.info("tokenDto={}",tokenDto);
         // 5. 토큰 발급
         return tokenDto;
     }
-    @Transactional
-    public JwtToken reissue(TokenRequestDto tokenRequestDto) {
-        // 1. Refresh Token 검증
-        if (!jwtTokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
-            throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
-        }
-
-        // 2. Access Token 에서 Member ID 가져오기
-        Authentication authentication = jwtTokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
-
-        // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져옴
-        RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
-
-        // 4. Refresh Token 일치하는지 검사
-        if (!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {
-            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
-        }
-
-        // 5. 새로운 토큰 생성
-        JwtToken tokenDto = jwtTokenProvider.generateToken(authentication);
-
-        // 6. 저장소 정보 업데이트
-        RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
-        refreshTokenRepository.save(newRefreshToken);
-
-        String key = "accessToken:" + authentication.getName();
-        redisTemplate.opsForValue().set(key, tokenDto.getAccessToken(), 60, TimeUnit.MILLISECONDS);
-
-
-        // 토큰 발급
-        return tokenDto;
-    }
+//    @Transactional
+//    public JwtToken reissue(TokenRequestDto tokenRequestDto) {
+//        // 1. Refresh Token 검증
+//        if (!jwtTokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
+//            throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
+//        }
+//
+//        // 2. Access Token 에서 Member ID 가져오기
+//        Authentication authentication = jwtTokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
+//
+//        // 5. 새로운 토큰 생성
+//        JwtToken tokenDto = jwtTokenProvider.generateToken(authentication);
+//        String key = "accessToken:" + authentication.getName();
+//        redisTemplate.opsForValue().set(key, tokenDto.getAccessToken(), 60, TimeUnit.MILLISECONDS);
+//
+//
+//        // 토큰 발급
+//        return tokenDto;
+//    }
 
     @Transactional
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         // 1. 쿠키에서 AccessToken 삭제
-        Cookie cookie = new Cookie("refreshToken", null);
+        Cookie cookie = new Cookie("accessToken", null);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
@@ -140,19 +117,13 @@ public class AuthService {
         if (accessToken != null && jwtTokenProvider.validateToken(accessToken)) {
             // 3. AccessToken으로부터 사용자 정보 가져오기
             Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
-
-            // 4. Redis에서 RefreshToken 삭제
-            String userId = authentication.getName();
-            jwtTokenProvider.getRedisTemplate().delete(userId); // Redis에서 RefreshToken 삭제
-
-            log.info("User {} logged out successfully", userId);
         } else {
             log.warn("No valid access token found for logout");
         }
     }
 
     private void createCookie(HttpServletResponse response, String token) {
-        Cookie cookie = new Cookie("refreshToken",token);
+        Cookie cookie = new Cookie("accessToken",token);
         cookie.setHttpOnly(true);  // JavaScript에서 접근 불가능하도록 설정
         cookie.setSecure(true);    // HTTPS에서만 전송 (HTTPS 환경에서 권장)
         cookie.setPath("/");       // 쿠키의 경로 설정
@@ -182,7 +153,7 @@ public class AuthService {
     private String getJwtFromCookies(HttpServletRequest request) {
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
-                if ("refreshToken".equals(cookie.getName())) {
+                if ("accessToken".equals(cookie.getName())) {
                     return cookie.getValue();  // accessToken 값 반환
                 }
             }

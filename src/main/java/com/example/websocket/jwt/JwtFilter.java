@@ -33,16 +33,31 @@ public class JwtFilter extends OncePerRequestFilter {
          * jwtTokenProvider.validateToken(jwt)
          * JWT옳은지 검증한다.
          */
-        if(StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        if(StringUtils.hasText(jwt)) {
+            if (!jwtTokenProvider.validateToken(jwt)) {
+                /**
+                 * 만료될시 httponly쿠키에 있는 accessToken을 없애면서 다시 로그인하게 만들기
+                 */
+                Cookie expiredCookie = new Cookie("accessToken", null);
+                expiredCookie.setHttpOnly(true);
+                expiredCookie.setSecure(true);
+                expiredCookie.setPath("/");
+                expiredCookie.setMaxAge(0); // 쿠키 삭제
+                response.addCookie(expiredCookie);
+            } else {
+                /**
+                 * 유효한 상태라면 권한 유지
+                 */
+                Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
         filterChain.doFilter(request,response);
     }
     private String getTokenFromCookies(Cookie[] cookies) {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("refreshToken")) {
+                if (cookie.getName().equals("accessToken")) {
                     return cookie.getValue();
                 }
             }

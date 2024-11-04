@@ -1,3 +1,7 @@
+# 2024-11-04
+JWT에 관해서 다시 공부를 하였다. 지금까지 나는 refreshToken은 accessToken이 만료되면 재발급하기 위해 사용했었는데 그런 용도가 아니였다. 
+refreshToken은 accessToken의 수명을 짧게 하기 위해서 사용하는거지 accessToken 수명이 짧으니까 refreshToken을 사용하는게 아니였다. 완전 잘못 이해했다.
+그래서 나는 refreshToken의 사용법을 알았지만 이걸 사용할려면 좀 까다롭고 어려운거 같아 차라리 accessToken의 수명을 좀 길게 주자라는 결론을 짓고 다시 만들었다.
 # 2024-11-03
 redis에 accessToken을 보관하고 httponly쿠키에 refreshToken을 보관하는 식으로 바꿨다. 커뮤니티를 통해 accessToken 하나로만 관리하는 방식을 들었다. 내일은 현재의 JWT파일들을 다 없애고 새롭게 만들어 볼 예정이다.
 ## 내일 수정할 파일

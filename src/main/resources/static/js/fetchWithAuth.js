@@ -1,9 +1,3 @@
-
-// API 호출 전에 Access Token이 만료되었는지 확인
-function isTokenExpired(token) {
-    const decoded = jwt_decode(token);
-    return decoded.exp * 1000 < Date.now();
-}
 async function fetchWithAuth(url, options = {}) {
     try {
         const response = await fetch(url, {
@@ -14,6 +8,7 @@ async function fetchWithAuth(url, options = {}) {
         // 401 상태인 경우 토큰 삭제 및 로그인 페이지로 리다이렉트
         if (response.status === 401) {
             handle401();
+            window.location.href = '/login'; // 로그인 페이지로 리다이렉트
         }
 
         return response;
@@ -24,10 +19,10 @@ async function fetchWithAuth(url, options = {}) {
 }
 
 function handle401() {
-    // 쿠키에서 accessToken과 refreshToken 삭제
     document.cookie = "accessToken=; Max-Age=0; path=/;";
     document.cookie = "refreshToken=; Max-Age=0; path=/;";
 }
+
 document.addEventListener('DOMContentLoaded', () => {
     const logoutBtn = document.getElementById('logoutBtn');
 

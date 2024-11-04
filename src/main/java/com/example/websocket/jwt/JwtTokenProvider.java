@@ -26,23 +26,22 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "Bearer";
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            // 30분
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 24*60*60*1000; // 하루
     private final Key key; // JWT 서명을 위한 key 객체 선언
 
     /**
      * StringRedisTemplate은 Spring FrameWork에서 제공하는 RedisTemplate의 문자열 버전
      */
-    private final StringRedisTemplate redisTemplate;
+//    private final StringRedisTemplate redisTemplate;
 
     public JwtTokenProvider(@Value("${security.token}") String securitKey, StringRedisTemplate redisTemplate) {
         byte[] keyBytes = Decoders.BASE64.decode(securitKey); // Base64로 인코딩된 securitKey 디코딩
         this.key = Keys.hmacShaKeyFor(keyBytes); // securitKey를 이용하여 key객체 생성
-        this.redisTemplate = redisTemplate;
+//        this.redisTemplate = redisTemplate;
     }
-    public StringRedisTemplate getRedisTemplate() {
-        return redisTemplate;
-    }
+//    public StringRedisTemplate getRedisTemplate() {
+//        return redisTemplate;
+//    }
 
     public JwtToken generateToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream() // Authentication에서 제공해주는 권한 생성
@@ -66,24 +65,9 @@ public class JwtTokenProvider {
                 .signWith(key, SignatureAlgorithm.HS512)//header : "alg" : "HS512"
                 .compact(); // jwt 문자열 생성
 
-        // RefreshToken 생성
-        // 유효 기간이 만료된 토큰을 새로운 토큰으로 발급
-        String refreshToken = Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities) // 권한 정보 추가
-                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
-                .signWith(key, SignatureAlgorithm.HS512)
-                .compact();
-
-        /**
-         * opsForValue()는 문자열 값을 다루기 위한 연산을 수행하는 ValueOperations 객체를 반환한다. 키-값 쌍으로 데이터를 저장 조회 가능
-         */
-        redisTemplate.opsForValue().set(authentication.getName(), accessToken, ACCESS_TOKEN_EXPIRE_TIME, TimeUnit.MINUTES);
-
         return JwtToken.builder()
                 .grentType(BEARER_TYPE)
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
                 .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
                 .build();
     }

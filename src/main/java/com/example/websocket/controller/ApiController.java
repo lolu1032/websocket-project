@@ -46,10 +46,10 @@ public class ApiController {
         return ResponseEntity.ok(loginToken);
     }
 
-    @PostMapping("/reissue")
-    public ResponseEntity<JwtToken> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
-        return ResponseEntity.ok(authService.reissue(tokenRequestDto));
-    }
+//    @PostMapping("/reissue")
+//    public ResponseEntity<JwtToken> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
+//        return ResponseEntity.ok(authService.reissue(tokenRequestDto));
+//    }
     @PostMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response) {
        authService.logout(request,response);
