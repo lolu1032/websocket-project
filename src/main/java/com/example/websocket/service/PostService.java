@@ -58,6 +58,8 @@ public class PostService {
     public Optional<Post> postData(Long id) {
         Optional<Post> optionalPost = postRepository.findById(id);
         Post post = optionalPost.get();
+        post.incrementViews();
+        postRepository.save(post);
         Post updatedPost = Post.builder()
                 .category(post.getCategory()) // 카테고리 복사
                 .title(post.getTitle())  // 타이틀 복사
@@ -68,6 +70,7 @@ public class PostService {
                 .content(convertMarkdownToHtml(post.getContent()))  // 컨텐츠 변환 후 설정
                 .endDate(post.getEndDate())  // 종료일 복사
                 .member(post.getMember())  // 멤버 복사
+                .views(post.getViews())
                 .build();
         return Optional.of(updatedPost);
     }

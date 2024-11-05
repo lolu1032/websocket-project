@@ -22,6 +22,8 @@ public class Post {
     private String position;
     private String language;
     private String endDate;
+    @Column(nullable = false)
+    private Integer views;
     /**
      * Lob = Large Object 대용량 데이터를 데이터베이스에 저장할 때 사용
      */
@@ -36,7 +38,7 @@ public class Post {
     private Member member;
 
     @Builder
-    public Post(String category, String title, int count, String day, String position, String language, String content, String endDate, Member member) {
+    public Post(String category, String title, int count, String day, String position, String language, String content, String endDate, Member member, Integer views) {
         this.category = category;
         this.title = title;
         this.count = count;
@@ -46,5 +48,9 @@ public class Post {
         this.content = content;
         this.endDate = endDate;
         this.member = member;
+        this.views = views;
+    }
+    public void incrementViews() {
+        this.views = this.views + 1;
     }
 }

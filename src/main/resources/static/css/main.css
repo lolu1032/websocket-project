@@ -180,7 +180,14 @@
     padding: 0px 10px;
 }
 .post-a {
+    width:100%;
+    display:flex;
+    justify-content:space-between;
     margin-left: auto;
+}
+.views {
+    font-size:14px;
+    font-weight:700;
 }
 .post-position {
     padding: 0px 10px;
