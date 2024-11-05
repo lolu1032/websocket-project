@@ -1,3 +1,13 @@
+# 2024-11-05
+조회수 기능을 만들었다. Post 엔티티에 Integer views를 추가하였습니다. <br>
+`    public void incrementViews() {
+        this.views = this.views + 1;
+    }
+`
+<br>
+들어갈시 +1되게 엔티티에 만들었습니다.
+![조회수](https://github.com/user-attachments/assets/91c9eb93-e4f6-4a6b-8083-8535f0cc67b3)
+
 # 2024-11-04
 JWT에 관해서 다시 공부를 하였다. 지금까지 나는 refreshToken은 accessToken이 만료되면 재발급하기 위해 사용했었는데 그런 용도가 아니였다. 
 refreshToken은 accessToken의 수명을 짧게 하기 위해서 사용하는거지 accessToken 수명이 짧으니까 refreshToken을 사용하는게 아니였다. 완전 잘못 이해했다.
