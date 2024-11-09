@@ -99,4 +99,11 @@ public class PostService {
         }
         return specification;
     }
+    public Page<Post> categoryView(String category,Pageable pageable) {
+        if (category.equals("all")) {
+            return findAllPosts(pageable);  // 전체 게시글 가져오기
+        } else {
+            return findPostsByCategory(category, pageable);  // 선택된 카테고리의 게시글만 가져오기
+        }
+    }
 }

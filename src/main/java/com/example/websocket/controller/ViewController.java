@@ -34,14 +34,7 @@ public class ViewController {
                        @RequestParam(value = "category", defaultValue = "all") String category,
                        Model model) {
         Pageable pageable = PageRequest.of(page, 15);
-        Page<Post> postPage;
-        log.info("category={}",category);
-        if (category.equals("all")) {
-            postPage = postService.findAllPosts(pageable);  // 전체 게시글 가져오기
-        } else {
-            postPage = postService.findPostsByCategory(category, pageable);  // 선택된 카테고리의 게시글만 가져오기
-        }
-        log.info("postPage={}",postPage);
+        Page<Post> postPage = postService.categoryView(category,pageable);
 
         model.addAttribute("postPage", postPage);
         model.addAttribute("selectedCategory", category);
