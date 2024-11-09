@@ -40,91 +40,26 @@
     <h2>베스트 뷰</h2>
 </div>
 <div class="post">
-    <div>
-        <a class="post-container" >
+    <div th:each="post : ${bestView}">
+        <a class="post-container" th:href="@{/post/{id}(id=${post.id})}">
             <div class="side-title">
-                <p class="side_title">카테고리</p>
+                <p class="side_title" th:text="${post.category}">카테고리</p>
             </div>
             <div class="post-title">
-                <h3 class="title">무엇무엇을 무엇을 구합니다</h3>
+                <h3 class="title" th:text="${post.title}">무엇무엇을 무엇을 구합니다</h3>
             </div>
             <div class="post-language">
-                <p class="language">언어1 언어2 언어3</p>
+                <p class="language" th:text="|언어 : ${post.language}">언어1 언어2 언어3</p>
             </div>
             <div class="post-position">
-                <p class="position">프론트, 백엔드</p>
+                <p class="position" th:text="|포지션 : ${post.position}">프론트, 백엔드</p>
             </div>
             <div class="post-people">
-                <p class="people">1</p>
+                <p class="people" th:text="|인원수 : ${post.count}|"></p>
             </div>
             <div class="post-a">
-                <p class="language">김창수(xxxx***)</p>
-            </div>
-        </a>
-    </div>
-    <div>
-        <a class="post-container" >
-            <div class="side-title">
-                <p class="side_title">카테고리</p>
-            </div>
-            <div class="post-title">
-                <h3 class="title">무엇무엇을 무엇을 구합니다</h3>
-            </div>
-            <div class="post-language">
-                <p class="language">언어1 언어2 언어3</p>
-            </div>
-            <div class="post-position">
-                <p class="position">프론트, 백엔드</p>
-            </div>
-            <div class="post-people">
-                <p class="people">1</p>
-            </div>
-            <div class="post-a">
-                <p class="language">김창수(xxxx***)</p>
-            </div>
-        </a>
-    </div>
-    <div>
-        <a class="post-container" >
-            <div class="side-title">
-                <p class="side_title">카테고리</p>
-            </div>
-            <div class="post-title">
-                <h3 class="title">무엇무엇을 무엇을 구합니다</h3>
-            </div>
-            <div class="post-language">
-                <p class="language">언어1 언어2 언어3</p>
-            </div>
-            <div class="post-position">
-                <p class="position">프론트, 백엔드</p>
-            </div>
-            <div class="post-people">
-                <p class="people">1</p>
-            </div>
-            <div class="post-a">
-                <p class="language">김창수(xxxx***)</p>
-            </div>
-        </a>
-    </div>
-    <div>
-        <a class="post-container" >
-            <div class="side-title">
-                <p class="side_title">카테고리</p>
-            </div>
-            <div class="post-title">
-                <h3 class="title">무엇무엇을 무엇을 구합니다</h3>
-            </div>
-            <div class="post-language">
-                <p class="language">언어1 언어2 언어3</p>
-            </div>
-            <div class="post-position">
-                <p class="position">프론트, 백엔드</p>
-            </div>
-            <div class="post-people">
-                <p class="people">1</p>
-            </div>
-            <div class="post-a">
-                <p class="language">김창수(xxxx***)</p>
+                <p class="views" th:text="|조회수 : ${post.views}"></p>
+                <p class="language" th:text="${post.member.name}">김창수(xxxx***)</p>
             </div>
         </a>
     </div>

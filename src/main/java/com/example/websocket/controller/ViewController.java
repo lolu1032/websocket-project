@@ -49,6 +49,10 @@ public class ViewController {
         Map<String, Object> paging = pagingService.paging(postPage, page);
         model.addAllAttributes(paging);
 
+        pageable = PageRequest.of(page,5);
+        Page<Post> bestView = postService.findAllByOrderByViewsDesc(pageable);
+        model.addAttribute("bestView",bestView);
+
         return "index";
     }
     @GetMapping("/login")
@@ -80,15 +84,7 @@ public class ViewController {
             Model model) {
 
         Pageable pageable = PageRequest.of(page, 15);
-        Specification<Post> specification = Specification.where(null);
-
-        if ("all".equals(searchList)) {
-            specification = specification.and(SearchSpecification.allSearch(search));
-        } else if ("title".equals(searchList)) {
-            specification = specification.and(SearchSpecification.titleSearch(search));
-        } else {
-            specification = specification.and(SearchSpecification.langSearch(search));
-        }
+        Specification<Post> specification = postService.search(searchList,search);
 
         Page<Post> postPage = postRepository.findAll(specification, pageable);
         model.addAttribute("postPage", postPage);

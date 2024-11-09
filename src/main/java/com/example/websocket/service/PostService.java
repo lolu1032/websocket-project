@@ -1,5 +1,6 @@
 package com.example.websocket.service;
 
+import com.example.websocket.SearchSpecification;
 import com.example.websocket.dao.MemberRepository;
 import com.example.websocket.dao.PostRepository;
 import com.example.websocket.dto.PostDTO;
@@ -9,6 +10,7 @@ import com.example.websocket.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
@@ -80,5 +82,21 @@ public class PostService {
 
     public Page<Post> findAllPosts(Pageable pageable) {
         return postRepository.findAll(pageable);
+    }
+
+    public Page<Post> findAllByOrderByViewsDesc(Pageable pageable) {
+        return postRepository.findAllByOrderByViewsDesc(pageable);
+    }
+    public Specification<Post> search(String searchList,String search) {
+        Specification<Post> specification = Specification.where(null);
+
+        if ("all".equals(searchList)) {
+            specification = specification.and(SearchSpecification.allSearch(search));
+        } else if ("title".equals(searchList)) {
+            specification = specification.and(SearchSpecification.titleSearch(search));
+        } else {
+            specification = specification.and(SearchSpecification.langSearch(search));
+        }
+        return specification;
     }
 }

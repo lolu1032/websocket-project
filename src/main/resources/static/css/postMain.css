@@ -15,7 +15,7 @@
 }
 
 .head-top h1 {
-    font-size: 32px; /* 제목 크기 증가 */
+    font-size: 24px; /* 제목 크기 증가 */
     margin-bottom: 15px; /* 아래 여백 */
     color: #333; /* 제목 색상 */
 }
@@ -23,15 +23,15 @@
 .head-mid, .head-foot {
     display: flex; /* Flexbox 사용 */
     justify-content: space-between; /* 요소 간격 */
-    margin-bottom: 10px; /* 아래 여백 줄임 */
-    padding: 10px; /* 패딩 추가 */
+    margin-bottom: 5px; /* 아래 여백 줄임 */
+    padding: 2px; /* 패딩 추가 */
     background-color: #ffffff; /* 흰색 배경 */
     border-radius: 6px; /* 둥근 모서리 */
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05); /* 미세한 그림자 효과 */
 }
 
 .category, .day, .endDate, .count, .language, .position {
-    font-size: 24px; /* 폰트 크기 */
+    font-size: 20px; /* 폰트 크기 */
     font-weight: 600;
     color: #555; /* 텍스트 색상 */
     flex: 1; /* 같은 비율로 공간을 차지하게 설정 */
@@ -44,12 +44,12 @@
     padding-top: 50px;
 }
 .content h1 {
-    font-size: 40px; /* H1 크기 조정 */
+    font-size: 32px; /* H1 크기 조정 */
     margin: 10px 0; /* 위아래 여백 */
 }
 
 .content p {
-    font-size: 22px; /* P 태그 크기 조정 */
+    font-size: 20px; /* P 태그 크기 조정 */
     line-height: 1.6; /* 줄 높이 조정 */
     margin: 8px 0; /* 위아래 여백 */
 }
@@ -67,6 +67,6 @@
     padding-top: 50px;
 }
 .name {
-    font-size: 26px;
+    font-size: 22px;
     margin-left : auto;
 }
