@@ -1,72 +1,95 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body {
+    background-color: #f3f4f6;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    line-height: 1.6;
+}
+.post-content {
+    width: 70%;
+    margin: 0px auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 0 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 .post-container {
     display: flex;
-    width: 50%;
-    margin: 0 auto;
+    width: 90%;
+    margin: 20px auto;
+    padding: 20px;
     flex-direction: column;
-    padding: 30px;
+    background-color: #f9fafb;
     border-radius: 8px;
-    background-color: #f8f9fa;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    gap: 20px;
+    border: 1px solid #e5e7eb;
 }
-
-.head-top {
-    text-align: center; /* 제목 중앙 정렬 */
-}
-
 .head-top h1 {
-    font-size: 24px; /* 제목 크기 증가 */
-    margin-bottom: 15px; /* 아래 여백 */
-    color: #333; /* 제목 색상 */
+    font-size: 26px;
+    margin-bottom: 20px;
+    color: #1d4ed8;
+    text-align: center;
+    font-weight: bold;
 }
-
 .head-mid, .head-foot {
-    display: flex; /* Flexbox 사용 */
-    justify-content: space-between; /* 요소 간격 */
-    margin-bottom: 5px; /* 아래 여백 줄임 */
-    padding: 2px; /* 패딩 추가 */
-    background-color: #ffffff; /* 흰색 배경 */
-    border-radius: 6px; /* 둥근 모서리 */
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05); /* 미세한 그림자 효과 */
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f1f5f9;
+    border-radius: 5px;
 }
-
 .category, .day, .endDate, .count, .language, .position {
-    font-size: 20px; /* 폰트 크기 */
+    font-size: 16px;
     font-weight: 600;
-    color: #555; /* 텍스트 색상 */
-    flex: 1; /* 같은 비율로 공간을 차지하게 설정 */
-    text-align: center; /* 텍스트 중앙 정렬 */
+    color: #374151;
+    flex: 1;
+    text-align: center;
 }
-
 .mid-container {
-    width: 50%;
-    margin: 0 auto;
-    padding-top: 50px;
+    width: 90%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
 }
 .content h1 {
-    font-size: 32px; /* H1 크기 조정 */
-    margin: 10px 0; /* 위아래 여백 */
+    font-size: 24px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #111827;
 }
-
 .content p {
-    font-size: 20px; /* P 태그 크기 조정 */
-    line-height: 1.6; /* 줄 높이 조정 */
-    margin: 8px 0; /* 위아래 여백 */
+    font-size: 18px;
+    line-height: 1.8;
+    margin: 15px 0;
+    color: #4b5563; /* 중간 톤 회색 */
 }
 .content p > img {
-       width: 100%; /* 부모 요소의 너비에 맞게 설정 */
-        height: auto; /* 이미지 비율 유지 */
-        object-fit: cover; /* 이미지가 잘리지 않게 맞춤 */
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    margin: 20px 0;
+    border-radius: 8px;
 }
 .foot-container {
-    display: flex; /* Flexbox 사용 */
-    justify-content: flex-end; /* 오른쪽 정렬 */
-    padding: 10px 0; /* 위아래 패딩 추가 (원하는 대로 조정) */
-    width: 50%;
-    margin: 0 auto;
-    padding-top: 50px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 20px;
+    width: 90%;
+    margin: 30px auto 0;
+    border-top: 1px solid #e5e7eb;
 }
 .name {
-    font-size: 22px;
-    margin-left : auto;
+    font-size: 18px;
+    font-weight: bold;
+    color: #6b7280; /* 중간 회색 */
+    margin-left: auto;
 }

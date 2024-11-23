@@ -17,26 +17,28 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
-<div class="post-container">
-    <div class="head-top">
-        <h1 th:text="${post.title}">제목</h1>
+<div class="post-content">
+    <div class="post-container">
+        <div class="head-top">
+            <h1 th:text="${post.title}">제목</h1>
+        </div>
+        <div class="head-mid">
+            <div class="category" th:text="|종류 : ${post.category}">카테고리</div>
+            <div class="day" th:text="|시작 일 : ${post.day}"></div>
+            <div class="endDate" th:text="|종료 일 : ${post.endDate}"></div>
+        </div>
+        <div class="head-foot">
+            <div class="count" th:text="|인원 수 : ${post.count}"></div>
+            <div class="language" th:text="|언어 : ${post.language}">언어</div>
+            <div class="position" th:text="|포지션 : ${post.position}">포지션</div>
+        </div>
     </div>
-    <div class="head-mid">
-        <div class="category" th:text="|종류 : ${post.category}">카테고리</div>
-        <div class="day" th:text="|시작 일 : ${post.day}"></div>
-        <div class="endDate" th:text="|종료 일 : ${post.endDate}"></div>
+    <div class="mid-container">
+        <div class="content" th:utext="${post.content}"></div>
     </div>
-    <div class="head-foot">
-        <div class="count" th:text="|인원 수 : ${post.count}"></div>
-        <div class="language" th:text="|언어 : ${post.language}">언어</div>
-        <div class="position" th:text="|포지션 : ${post.position}">포지션</div>
+    <div class="foot-container">
+        <div class="name" th:text="|작성자 : ${post.member.name}">작성자</div>
     </div>
-</div>
-<div class="mid-container">
-    <div class="content" th:utext="${post.content}"></div>
-</div>
-<div class="foot-container">
-    <div class="name" th:text="|작성자 : ${post.member.name}">작성자</div>
 </div>
 </body>
 </html>
