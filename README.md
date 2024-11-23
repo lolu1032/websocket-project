@@ -1,3 +1,7 @@
+# 2024-11-09
+베스트 뷰 만들기
+![베스트뷰](https://github.com/user-attachments/assets/21d23ac6-b186-47eb-95a8-9bde366443ed)
+
 # 2024-11-05
 조회수 기능을 만들었다. Post 엔티티에 Integer views를 추가하였습니다. <br>
 `    public void incrementViews() {
